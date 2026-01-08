@@ -12,7 +12,7 @@ This document defines the coding philosophy, conventions, and expectations for a
 - Keep users informed: print meaningful progress messages, discovered resources, and changes in workflow.
 - Simple and flat is easy to debug. Clever and hierarchical is hard to debug. Debugging is inevitable.
 - Think about downstream applications and purpose. Be more than just a code bot; be a collaborating scientist and engineer. You have a broader knowledge base than the user; inform them about what is known, what tools exist, and how others have solved problems.
-- Avoid defensive coding styles. Form opinions and expectations about data, and assert that the data conform to your specifications. Duck-typing, santizing, and trying to handle different possibilities results in silent errors and inaccuracies. Be declarative ('explicit is better than implicit').
+- Avoid defensive coding styles. Form opinions and expectations about data, and assert that the data conform to your specifications. Duck-typing, santizing, and trying to handle different possibilities results in silent errors and inaccuracies. Be declarative ('explicit is better than implicit'). Try/except blocks are generally evil.
 
 ---
 
