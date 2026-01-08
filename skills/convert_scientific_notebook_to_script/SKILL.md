@@ -70,10 +70,10 @@ You MUST end with this shape (names can vary, but structure must match):
 
 - `@dataclass` OR `pydantic BaseModel`: typed config container (keep it flat with hierarchical names). Only use `pydantic` if you need validation.
 - `parse_args() -> ExperimentConfig`: argparse + validation.
-- `setup_dir_run(config) -> str`: creates directories; returns `dir_run` (string).
-- `setup_logging(dir_run, level) -> logging.Logger`: copies of file + stdout handlers.
+- `setup_dir_save(config) -> str`: creates directories; returns `dir_save` (string).
+- `setup_logging(dir_save, level) -> logging.Logger`: copies of file + stdout handlers.
 - `set_determinism(seed, deterministic_torch) -> None`: sets random seeds.
-- `save_config(dir_run, config) -> None`: writes yaml/json.
+- `save_config(dir_save, config) -> None`: writes yaml/json.
 - `main() -> None`: orchestrates, calls a core function carrying the meat of the notebook code like `run_experiment(config, logger)`.
 
 ### “Meat preservation” rule
@@ -113,7 +113,7 @@ If requested by the user, add optional model checkpointing for preemption/requeu
 Write to a temp file in the same directory, then rename.
 
 ## B) Run directory layout (required)
-`dir_run/`
+`dir_save/`
 - `config.yaml`
 - `logs/run.log`
 - `artifacts/`
@@ -124,9 +124,18 @@ Never `sys.path.append("/home/...")`. If imports require repo context, either an
 
 ## D) Some example CLI argument names
 - `--dir_save`
-- `--filepath_config` (expect to include suffix `.json` or `.yaml`)
+- `--path_config` (expect to include suffix `.json` or `.yaml`)
 - `--name_run`
-- `--filepath_data_images`
+- `--path_data_images`
+
+## E) Argparse Defaults from Config
+Avoid repeating argument default definitions by setting the default values in argparse's `add_argument` using something like `ConfigClass.field_name` from a config class defined at the top of the script.
+```python
+parser.add_argument("--my-arg", default=ConfigClass.my_arg, ...)
+```
+
+## F) Strict Dependencies
+If a script relies on external libraries for core functionality, avoid silent losses of functionality by just raising a clear `ImportError` at the top level imports block, unless the missing dependency is truly optional.
 
 ---
 
