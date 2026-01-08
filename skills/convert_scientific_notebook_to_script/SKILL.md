@@ -124,9 +124,9 @@ Never `sys.path.append("/home/...")`. If imports require repo context, either an
 
 ## D) Some example CLI argument names
 - `--dir_save`
-- `--path_config` (expect to include suffix `.json` or `.yaml`)
+- `--filepath_config` (expect to include suffix `.json` or `.yaml`)
 - `--name_run`
-- `--path_data_images`
+- `--filepath_data_images`
 
 ---
 
