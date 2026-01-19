@@ -1,3 +1,8 @@
+---
+name: convert_script_to_slurm_runs
+description: Generates SLURM job submission infrastructure for existing Python scripts, including worker shell scripts and batch submission handlers.
+---
+
 # Convert Python Script to SLURM Runs
 
 **Purpose**  
@@ -99,14 +104,22 @@ def setup_logging(dir_run: str, level: int = logging.INFO) -> logging.Logger:
 # -----------------------------------------------------------------------------
 # Arguments (all required, passed from submit script)
 # -----------------------------------------------------------------------------
-RUN_NAME=$1
-ARG_A=$2
-ARG_B=$3
+# Arg 1 is ALWAYS the absolute path to the analysis script
+ANALYSIS_SCRIPT=$1
+RUN_NAME=$2
+ARG_A=$3
+ARG_B=$4
 # ... more args
 
 # Validate required arguments
-if [ -z "$RUN_NAME" ] || [ -z "$ARG_A" ] || [ -z "$ARG_B" ]; then
-    echo "Usage: $0 <run_name> <arg_a> <arg_b> ..."
+if [ -z "$ANALYSIS_SCRIPT" ] || [ -z "$RUN_NAME" ]; then
+    echo "Usage: $0 <analysis_script_path> <run_name> ..."
+    exit 1
+fi
+
+# Verify the analysis script exists at the passed path
+if [ ! -f "$ANALYSIS_SCRIPT" ]; then
+    echo "Error: Analysis script not found at $ANALYSIS_SCRIPT"
     exit 1
 fi
 
@@ -118,24 +131,8 @@ fi
 CONDA_ENV="<env_name>"
 PYTHON_EXEC="/path/to/.conda/envs/${CONDA_ENV}/bin/python"
 
-# Verify python executable exists
 if [ ! -x "$PYTHON_EXEC" ]; then
     echo "Error: Python executable not found at $PYTHON_EXEC"
-    exit 1
-fi
-
-# -----------------------------------------------------------------------------
-# Path Resolution
-# -----------------------------------------------------------------------------
-# Get directory containing this script using BASH_SOURCE.
-# BASH_SOURCE[0] is the path to this script, even when sourced.
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-# Analysis script is one level up from runs/
-ANALYSIS_SCRIPT="${SCRIPT_DIR}/../<script_name>.py"
-
-if [ ! -f "$ANALYSIS_SCRIPT" ]; then
-    echo "Error: Analysis script not found at $ANALYSIS_SCRIPT"
     exit 1
 fi
 
@@ -153,10 +150,10 @@ exit $?
 
 ### Key Patterns
 
-1. **Explicit Python Path**: Use full path to conda python, not `conda activate`
-2. **BASH_SOURCE**: Use for reliable script directory resolution
-3. **All Arguments Required**: No optional arguments; fail loudly if missing
-4. **No Post-Hoc Log Copying**: Python script handles its own file logging
+1. **Pass Absolute Path**: Calculates script path in Python and passes it as `$1`. Avoids fragile relative path resolution in Bash (which breaks in SLURM spool dirs).
+2. **Explicit Python Path**: Use full path to conda python, not `conda activate`.
+3. **All Arguments Required**: No optional arguments; fail loudly.
+4. **No Post-Hoc Log Copying**: Python script handles files logging.
 
 ---
 
@@ -214,11 +211,15 @@ def main():
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     
+    # Resolve paths relative to this script
     current_dir = Path(__file__).resolve().parent
     worker_script = current_dir / "run_<name>.sh"
+    # Analysis script is one level up (or wherever it is relative to this file)
+    analysis_script = (current_dir / "../<script_name>.py").resolve()
     logs_dir = current_dir / "logs"
     
     assert worker_script.exists(), f"Worker script not found: {worker_script}"
+    assert analysis_script.exists(), f"Analysis script not found: {analysis_script}"
     
     logs_dir.mkdir(exist_ok=True)
     Path(OUTPUT_ROOT).mkdir(parents=True, exist_ok=True)
@@ -227,23 +228,37 @@ def main():
         run_name = dataset["name"]
         dir_save = str(Path(OUTPUT_ROOT) / run_name)
         
+        # Build sbatch command
+        # Pass resolution script path as 1st argument
         cmd = [
             "sbatch",
             f"--output={logs_dir}/<name>_{run_name}_%j.out",
             f"--error={logs_dir}/<name>_{run_name}_%j.err",
             str(worker_script),
-            run_name,
-            dataset["arg_a"],
-            dir_save,
-            dataset["arg_b"],
+            str(analysis_script),  # Passed as $1
+            run_name,              # Passed as $2
+            dataset["arg_a"],      # Passed as $3
+            dir_save,              # Passed as $4
+            dataset["arg_b"],      # Passed as $5
         ]
         
         print(f"[{i+1}/{len(DATASETS)}] {run_name}")
         print(f"  Command: {' '.join(cmd)}")
         
         if not args.dry_run:
-            subprocess.run(cmd, check=True)
-            print("  Submitted.")
+            try:
+                # Use capture_output=True and stdin=DEVNULL to prevent hangs
+                result = subprocess.run(
+                    cmd, 
+                    check=True, 
+                    capture_output=True, 
+                    text=True, 
+                    stdin=subprocess.DEVNULL
+                )
+                print(f"  Submitted: {result.stdout.strip()}")
+            except subprocess.CalledProcessError as e:
+                print(f"  Error submitting job: {e.stderr}")
+                raise
         else:
             print("  (dry-run)")
 
@@ -254,18 +269,18 @@ if __name__ == "__main__":
 
 ### Key Patterns
 
-1. **TypedDict**: Use for explicit, typed dataset specs
-2. **No Optional Fields**: All dataset fields required; fail loudly if missing
-3. **Run Name**: Each dataset has a `name` used for output dir and log naming
-4. **Dry-Run**: Always support `--dry-run` for testing
+1. **Calculate & Pass Path**: The Python script calculates the absolute path to the analysis script and passes it to the worker.
+2. **Robust Subprocess**: Use `stdin=subprocess.DEVNULL` and `capture_output=True` to assume robustness against SLURM hangs.
+3. **TypedDict**: Use for explicit, typed dataset specs.
+4. **Dry-Run**: Always support `--dry-run`.
 
 ---
 
 ## Checklist
 
 - [ ] Create `runs/` directory with `logs/` subdirectory
-- [ ] Create `.sh` worker script with explicit python path
-- [ ] Create `.py` submit script with TypedDict datasets
+- [ ] Create `.sh` worker script that accepts script path as `$1`
+- [ ] Create `.py` submit script that calculates and passes absolute script path
 - [ ] Implement `setup_logging()` in the analysis script with dual handlers
 - [ ] Ensure all arguments are explicitly required (no optional/None)
 - [ ] Test with `--dry-run` before actual submission
@@ -275,7 +290,8 @@ if __name__ == "__main__":
 ## Anti-Patterns to Avoid
 
 1. **Don't use `conda activate`** in non-interactive bash scripts
-2. **Don't use optional arguments** or `if arg is not None` patterns
+2. **Don't rely on `../` or relative paths** in the worker script (breaks in SLURM spool)
 3. **Don't use tuples** for dataset specs; use dicts with descriptive keys
-4. **Don't swallow errors** with try/except in the worker script
-5. **Don't copy logs post-hoc** from shell; use Python logging with dual handlers
+4. **Don't swallow errors** with try/except
+5. **Don't copy logs post-hoc** from shell; use Python logging
+6. **Don't leave subprocess stdin open**; use `subprocess.DEVNULL`

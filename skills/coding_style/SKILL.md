@@ -1,3 +1,8 @@
+---
+name: coding_style
+description: Defines coding philosophy, conventions, and expectations for LLM-generated code to ensure clarity, maintainability, and alignment with project workflows.
+---
+
 # Coding Style Guide
 
 **Purpose**  
