@@ -83,7 +83,6 @@ def deep_update_dict(
 ) -> Union[dict, None]:
     """
     Updates a nested dictionary with a new value.
-    RH 2023
 
     Args:
         dictionary (dict): 
@@ -128,7 +127,6 @@ def phase_correlation(
     Perform phase correlation on two images. Calculation performed along the
     last two axes of the input arrays (-2, -1) corresponding to the (height,
     width) of the images.
-    RH 2024
 
     Args:
         im_template (np.ndarray): 
@@ -165,7 +163,8 @@ def compose_transform_matrices(
 ) -> np.ndarray:
     """
     Composes two transformation matrices to create a transformation from one
-    image to another. RH 2023
+    image to another. 
+    RH 2023
 
     Args:
         matrix_AB (np.ndarray): 
@@ -286,3 +285,21 @@ def apply_residual_config(dino, config):
 - Ask when uncertain. Do not guess or hallucinate.
 
 ---
+
+## 11. GPU Tensor Handling
+
+Rules for working with PyTorch tensors.
+
+1. **Delete large intermediate tensors explicitly**
+   ```python
+   del large_tensor
+   torch.cuda.empty_cache()
+   ```
+
+2. **Use configurable device strings**
+   ```python
+   DEVICE = config.device  # "cuda:0" or "cpu"
+   tensor = tensor.to(DEVICE)
+   ```
+
+3. **Prefer numpy format for portability** when saving analysis results (`.npy`/`.npz`).

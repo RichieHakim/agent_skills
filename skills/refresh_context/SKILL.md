@@ -9,31 +9,18 @@ When starting work on an existing project or after a long gap, quickly orient yo
 
 ## Steps
 
-1. **Read `.agent/AGENTS.md`** - Contains project-specific parameters:
-   - Conda environment name
-   - Compute node access (SSH target, resources)
-   - SBATCH templates
-   - Special instructions
+1. **Read `.agent/AGENTS.md`** - Contains project-specific parameters and instructions
 
-2. **Check `agent_assets/` directory** - Your personal knowledge store:
-   - Find project-specific MEMORIES.md files
-   - Check `code/` for utility scripts
-   - Review any logs or test outputs
+2. **Find or make an `agent_assets/<conversation_topic>` directory** - This is your personal knowledge store. Find or make the following within this directory:
+   - A project-specific `MEMORIES.md` files. If this exists, read it carefully.
+   - A `code/` subdirectory for one-off/temporary utility scripts called only by the agent (these are not made part of the repo)
+   - An `artifacts/` subdirectory for agent-only logs or test outputs.
 
-3. **Read relevant MEMORIES.md** - Contains:
-   - Abstract context and key insights
-   - Data shapes and access patterns
-   - Session logs of what was tried/accomplished
-   - Useful paths and tips
+3. **Look through available skills**
+   - Read/ingest the `keeping_memories` skill and begin logging important information to the appropriate `MEMORIES.md` file
+   - Decide which other skills are relevant to study and possibly read them
 
 4. **Check conversation summary** (if available):
-   - Review any checkpoint summaries
-   - Note the current task status
-   - Identify blocking issues
-
-## Tips
-
-- Don't skip AGENTS.md - it has critical environment info
-- MEMORIES.md is your most valuable context source
-- Look for `agent_assets/code/` scripts that may already solve your problem
-- Check various `logs/` directories for recent run outputs
+   - Review any conversation summaries
+   - Note the current status of the task/goal
+   - Identify blocking issues and next steps

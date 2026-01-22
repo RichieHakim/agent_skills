@@ -295,3 +295,35 @@ if __name__ == "__main__":
 4. **Don't swallow errors** with try/except
 5. **Don't copy logs post-hoc** from shell; use Python logging
 6. **Don't leave subprocess stdin open**; use `subprocess.DEVNULL`
+
+---
+
+## SLURM Best Practices
+
+Additional rules for writing robust SLURM job scripts:
+
+### Worker Script Requirements
+
+1. **Use absolute paths for data and relative paths for code within the repo**
+
+2. **Use explicit Python executable paths**
+   ```bash
+   PYTHON_EXEC="/n/home03/rhakim/.conda/envs/${CONDA_ENV}/bin/python"
+   ```
+   - Verify executable exists before running
+
+3. **Logging**
+   - Print job ID, run name, key paths at start
+   - Copy SLURM logs to output directory for reproducibility
+
+4. **Capture and propagate exit codes**
+   ```bash
+   RET=$?
+   if [ $RET -ne 0 ]; then
+       echo "Script failed with exit code $RET"
+       exit $RET
+   fi
+   ```
+
+5. **Avoid passing variables using environment variables** — prefer explicit arguments
+
