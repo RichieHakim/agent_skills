@@ -276,6 +276,51 @@ if __name__ == "__main__":
 
 ---
 
+## Hardcoded Submitter Option (Simple Sweeps)
+
+When the sweep is specific and short-lived, prefer a **hardcoded submitter** with no argparse. This keeps it easy to read, edit, and audit.
+
+**Guidelines**
+- Put **all configuration at the top** of the file (paths, ranks, repeats, mouse/date lists).
+- Use **minimal functions** (or none); keep logic linear.
+- Keep the **single-run worker** (`run_<name>.sh`) for one job; the submitter only loops and calls `sbatch`.
+- Use a **stable job-name prefix** (e.g., `--job-name=tca_consistency_day0sOnly`) so you can cancel all jobs quickly with `scancel -n <prefix>`.
+
+**Example Skeleton**
+
+```python
+#!/usr/bin/env python3
+from pathlib import Path
+import subprocess
+
+DIR_DATA_ROOT = "/path/to/data"
+DIR_OUTPUT_ROOT = "/path/to/output"
+RANKS = [2, 4, 6, 8]
+DRY_RUN = True
+
+# ... collect dataset paths ...
+
+for dataset in datasets:
+    for rank in RANKS:
+        cmd = [
+            "sbatch",
+            "--job-name=my_sweep",
+            "--output=/path/to/logs/%j.out",
+            "--error=/path/to/logs/%j.err",
+            "run_<name>.sh",
+            "/abs/path/to/<script_name>.py",
+            "run_name",
+            dataset["path"],
+            "/output/base",
+            str(rank),
+        ]
+        print(" ".join(cmd))
+        if not DRY_RUN:
+            subprocess.run(cmd, check=True, text=True, capture_output=True)
+```
+
+---
+
 ## Checklist
 
 - [ ] Create `runs/` directory with `logs/` subdirectory
@@ -326,4 +371,3 @@ Additional rules for writing robust SLURM job scripts:
    ```
 
 5. **Avoid passing variables using environment variables** — prefer explicit arguments
-
