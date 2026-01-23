@@ -1,9 +1,14 @@
+---
+name: AGENTS.md
+description: Agentic configuration, guidelines, compute environments, resource allocation, and artifact management.
+---
+
 # Specific parameters
 ## repository variables
 - <conda_environment>: 'fr'
 - <agent_assets> folder name: `agent_assets/`
 - <remote>: True
-- <compute_node_name>: 'none'
+- <compute_node_name>: 'holygpu8a15301.rc.fas.harvard.edu'
 - <compute_node_resources>: 'gpu:h100, cpu:24, mem:360G'
 - <temp_data_dir>: /n/netscratch/bsabatini_lab/Lab/rhakim/temp
 
