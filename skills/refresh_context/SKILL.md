@@ -9,7 +9,7 @@ When starting work on an existing project or after a long gap, quickly orient yo
 
 ## Steps
 
-1. **Read `.agent/AGENTS.md`** - Contains project-specific parameters and instructions
+1. **Read top-level `AGENTS.md`** - Contains project-specific parameters and instructions
 
 2. **Find or make an `agent_assets/<conversation_topic>` directory** - This is your personal knowledge store. Find or make the following within this directory:
    - A project-specific `MEMORIES.md` files. If this exists, read it carefully.

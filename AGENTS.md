@@ -5,7 +5,7 @@ description: Agentic configuration, guidelines, compute environments, resource a
 
 # Specific parameters
 ## repository variables
-- <conda_environment>: 'fr'
+- <conda_environment>: '/n/holylabs/bsabatini_lab/Users/rhakim/envs/afm'
 - <agent_assets> folder name: `agent_assets/`
 - <remote>: True
 - <compute_node_name>: 'holygpu8a15301.rc.fas.harvard.edu'
