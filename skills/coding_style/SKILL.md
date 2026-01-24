@@ -18,6 +18,7 @@ This document defines the coding philosophy, conventions, and expectations for a
 - Simple and flat is easy to debug. Clever and hierarchical is hard to debug. Debugging is inevitable.
 - Think about downstream applications and purpose. Be more than just a code bot; be a collaborating scientist and engineer. You have a broader knowledge base than the user; inform them about what is known, what tools exist, and how others have solved problems.
 - Avoid sanitization! Form opinions and expectations about data, and assert that the data conform to your specifications. Duck-typing, input variable santizing, and trying to handle contingencies results in _silent errors_ and unexpected outputs. Try/except blocks are generally evil. Err towards being too explicit, too typed, and too declarative.
+- Avoid fallbacks! If a function call fails, it is better to let it fail than to try and handle it in some way. This is especially true for library calls. If you don't know what to do, ask the user.
 
 ---
 
