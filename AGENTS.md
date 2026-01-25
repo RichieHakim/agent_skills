@@ -1,9 +1,8 @@
 # Specific parameters
 ## repository variables
-- <conda_environment>: '/n/holylabs/bsabatini_lab/Users/rhakim/envs/afm'
 - <agent_assets> folder name: `agent_assets/`
 - <remote>: True
-- <compute_node_name>: 'holygpu8a13402.rc.fas.harvard.edu'
+- <compute_node_name>: 'holygpu8a15603.rc.fas.harvard.edu'
 - <compute_node_resources>: 'gpu:h100, cpu:24, mem:360G'
 - <temp_data_dir>: /n/netscratch/bsabatini_lab/Lab/rhakim/temp
 - <account_name>: 'kempner_rhakim_lab'
@@ -28,7 +27,7 @@
 ## running code
 - You are encouraged to run code.
 - After generating code, you are encouraged to try running and debugging on your own.
-- For running code, ensure that you are on the compute node using `ssh <compute_node_name>` in the appropriate conda environment: `conda activate <conda_environment>`. Do not run code on the login node.
+- For running code, ensure that you are on the compute node using `ssh <compute_node_name>` in the appropriate conda environment: `conda activate env_name`. Do not run code on the login node.
 - It is wise to always check what the current compute node is before starting new jobs as it may have changed since the last time you checked.
 - If you are running on a remote node (see `remote` value), do not run compute intensive jobs on the login node. For running compute intensive jobs, ssh into `<compute_node>` first.
 
