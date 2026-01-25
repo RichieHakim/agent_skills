@@ -14,12 +14,15 @@ Goal: convert PDFs to Markdown as losslessly as possible (no summarization). Thi
 
 ## Quick use
 ```bash
+SKILLS_DIR="$(readlink -f .agent/skills)"
 conda activate mineru
-python skills/read-scientific-pdfs-mineru/scripts/mineru_extract.py \
+python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
   --filepath_pdf /path/to/paper.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
 ```
+
+If `.agent/skills` is unavailable, set `SKILLS_DIR` to your central skills checkout (e.g., `$CODEX_HOME/skills`) and reuse the same command.
 
 ## Default execution mode: dispatch via sbatch
 Use Slurm by default. Follow `AGENTS.md` for partition/cpu/mem/account values. Create a small dispatch script in `agent_assets/<project_name>/code/` and submit it.
@@ -38,9 +41,11 @@ Example `agent_assets/<project_name>/code/mineru_dispatch.sbatch`:
 
 set -euo pipefail
 
+source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate mineru
 
-python skills/read-scientific-pdfs-mineru/scripts/mineru_extract.py \
+SKILLS_DIR="$(readlink -f .agent/skills)"
+python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
   --filepath_pdf /path/to/paper.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
@@ -51,12 +56,17 @@ Submit with:
 sbatch agent_assets/<project_name>/code/mineru_dispatch.sbatch
 ```
 
+## Local fallback (no sbatch)
+If the PDF is small and you already have an interactive compute node, run the “Quick use” command directly. This avoids waiting for Slurm scheduling.
+
 ## If the user explicitly asks to use a compute node (interactive)
 SSH to the node in `AGENTS.md`, activate `mineru`, then run the script:
 ```bash
 ssh <compute_node_name>
+source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate mineru
-python skills/read-scientific-pdfs-mineru/scripts/mineru_extract.py \
+SKILLS_DIR="$(readlink -f .agent/skills)"
+python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
   --filepath_pdf /path/to/paper.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
@@ -72,6 +82,17 @@ python skills/read-scientific-pdfs-mineru/scripts/mineru_extract.py \
 ## Recommended output layout
 Use `agent_assets/<project_name>/pdf_conversions/` so outputs are easy to find and reuse.
 
+## Output sanity check
+After completion, confirm extraction:
+```bash
+find agent_assets/<project_name>/pdf_conversions -type f -name "*.md"
+```
+
+## Streamlined error feedback
+- Check job state: `squeue -j <jobid>`
+- Stream logs: `tail -f agent_assets/<project_name>/artifacts/mineru_<jobid>.err`
+- If `.err` is empty, also check `.out`.
+
 ## Seamless handoff (read Markdown into context)
 After extraction, open the printed `.md` file and read it into context. If multiple `.md` files were produced, pick the one matching the PDF basename.
 
@@ -84,7 +105,7 @@ sed -n '1,200p' agent_assets/<project_name>/pdf_conversions/<basename>/<subdir>/
 If `conda activate mineru` fails or MinerU isn’t on PATH, tell the user what to create/install and stop.
 
 ## Throughput (rough guidance)
-On GPU nodes, digital PDFs tested so far averaged ~24–53 seconds per page (short papers were slower per page). Expect variability by hardware, PDF layout complexity, and chosen method.
+On GPU nodes, digital PDFs tested so far averaged ~20–60 seconds per page (short papers are slower per page). Expect variability by hardware, PDF layout complexity, and chosen method.
 
 ## Safety
 Never upload PDFs to external services without explicit approval.
