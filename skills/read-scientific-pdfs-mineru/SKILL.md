@@ -7,6 +7,9 @@ description: Extract scientific PDFs to lossless Markdown using MinerU. Assumes 
 
 Goal: convert PDFs to Markdown as losslessly as possible (no summarization). This skill assumes a conda env named `mineru` already exists. If it doesn’t, **stop** and tell the user what is missing (create the env + install MinerU) and do not attempt installs.
 
+## PDF placement
+Save the source PDF under `agent_assets/<project_name>/artifacts/pdf_conversions/` before extraction. Use the same basename throughout the conversion outputs.
+
 ## Method differences (choose based on PDF type)
 - `txt`: Use for digital PDFs with selectable text. Fastest and most faithful for journals/preprints.
 - `ocr`: Use for scanned PDFs or image-only PDFs. Slower; OCR errors are possible.
@@ -17,7 +20,7 @@ Goal: convert PDFs to Markdown as losslessly as possible (no summarization). Thi
 SKILLS_DIR="$(readlink -f .agent/skills)"
 conda activate mineru
 python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
-  --filepath_pdf /path/to/paper.pdf \
+  --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
 ```
@@ -46,7 +49,7 @@ conda activate mineru
 
 SKILLS_DIR="$(readlink -f .agent/skills)"
 python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
-  --filepath_pdf /path/to/paper.pdf \
+  --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
 ```
@@ -67,7 +70,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate mineru
 SKILLS_DIR="$(readlink -f .agent/skills)"
 python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
-  --filepath_pdf /path/to/paper.pdf \
+  --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
 ```

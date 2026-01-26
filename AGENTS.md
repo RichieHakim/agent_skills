@@ -59,8 +59,11 @@ Skills are located in `.agent/skills/`. Each skill folder contains a `SKILL.md` 
 
 | Skill | Purpose |
 |-------|---------|
+| `onboard_new_agent` | Onboard a new agent and summarize prior work |
 | `refresh_context` | How to refresh context and understand a project quickly |
 | `keeping_memories` | How to maintain and update MEMORIES.md files |
 | `convert_scientific_notebook_to_script` | Convert Jupyter notebooks to standalone scripts |
 | `convert_script_to_slurm_runs` | Create SLURM submission scripts from Python code |
 | `coding_style` | Coding conventions for this project |
+| `read-scientific-pdfs-mineru` | Read scientific PDFs using MinerU |
+| `scientific_figure_export` | Export figures from scientific PDFs using MinerU |

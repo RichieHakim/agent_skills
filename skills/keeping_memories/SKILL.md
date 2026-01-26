@@ -28,15 +28,15 @@ Chronological record of what was tried and accomplished.
 Frequently referenced directories and files.
 
 ## Tips for Future Agents
-Actionable advice for common pitfalls.
+Actionable advice for common pitfalls and self-analysis of your own behavior.
 ```
 
 ## When to Update
 
-- **After discovering non-obvious information** (data shapes, API quirks)
+- **After discovering non-obvious information** (data shapes, code patterns, API quirks)
 - **After completing a task** (add to session log)
 - **After hitting and resolving a blocker** (document the solution)
-- **After learning a new pattern** (H5 access, path conventions)
+- **Whenever you think of something useful for future agents to know**
 
 ## Best Practices
 
