@@ -1,6 +1,5 @@
 # Specific parameters
 ## repository variables
-- <agent_assets> folder name: `agent_assets/`
 - <remote>: True
 - <conda_env_name>: 'wm'
 - <compute_node_name>: 'holygpu8a15603.rc.fas.harvard.edu'
@@ -41,10 +40,10 @@
 - The slurm scheduler on rc.fas.harvard.edu constrains the number of active jobs to be 16. It is wise to use array jobs with %15 to allow for a free slot for other jobs to run in.
 
 ## artifact handling
-- Make and use an <agent_assets> directory that is in the repo top-level, and make a task/project specific subdirectory within it. Always know what is in there. It is your personal quiver of tools and knowledge.
-- Make and use a `code/` directory within the task/project specific subdirectory of <agent_assets>. Place any temporary code files (e.g. for checks) within it.
-- Use a `MEMORIES.md` file within the task/project specific subdirectory of <agent_assets> to store knowledge liberally; the most successful agents typically reference and edit this file at least once per prompt to describe specific knowledge, insights, and a log of what has been tried and accomplished.
-- Place all generated artifacts related to temporary/agentic work in the task/project specific subdirectory of <agent_assets>.
+- Make and use an `agent_assets/` directory that is in the repo top-level, and make a task/project specific subdirectory within it. Always know what is in there. It is your personal quiver of tools and knowledge.
+- Make and use a `code/` directory within the task/project specific subdirectory of `agent_assets/`. Place any temporary code files (e.g. for checks) within it.
+- Use a `MEMORIES.md` file within the task/project specific subdirectory of `agent_assets/` to store knowledge liberally; the most successful agents typically reference and edit this file at least once per prompt to describe specific knowledge, insights, and a log of what has been tried and accomplished.
+- Place all generated artifacts related to temporary/agentic work in the task/project specific subdirectory of `agent_assets/`.
 - Be liberal in storing artifacts. _Anything_ that you think will be helpful for guiding yourself in the future should be placed there.
 
 ```
