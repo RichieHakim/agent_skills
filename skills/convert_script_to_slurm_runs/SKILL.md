@@ -30,6 +30,7 @@ The Python script must:
 2. Accept `--dir_save` (output directory where results and logs are saved)
 3. **Use Python stdlib `logging` with dual handlers** (see Logging Pattern below)
 4. Be executable as: `python script.py --arg1 val1 --arg2 val2 ...`
+5. Prefer only standard library imports in the submitter/driver helpers (i.e., `submit_<script_name>.py`) so the submission workflow works under the base Python environment without needing extra packages.
 
 ---
 
@@ -175,7 +176,7 @@ import argparse
 import subprocess
 from pathlib import Path
 from typing import List, TypedDict
-
+## ^ note the lack of imports from non-stdlib packages
 
 # -----------------------------------------------------------------------------
 # Dataset Definitions
