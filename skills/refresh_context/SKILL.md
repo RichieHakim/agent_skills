@@ -19,6 +19,7 @@ When starting work on an existing project or after a long gap, quickly orient yo
   - An `artifacts/` subdirectory for agent-only logs or test outputs.
 
 3. **Look through available skills**
+- Skills in the `.agent/skills` directory describe skills that are general/portable across different repos and projects. If available, skills in a `.agent/repo_skills` directory are skills specific to this repo.
 - Read/ingest the `keeping_memories` skill and begin logging important information to the appropriate `MEMORIES.md` file
 - Decide which other skills are relevant to study and possibly read them
 
