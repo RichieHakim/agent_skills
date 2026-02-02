@@ -10,21 +10,57 @@ This document defines the coding philosophy, conventions, and expectations for a
 
 ---
 
-## 1. Philosophy
-- Prioritize clarity and reproducibility. Expect humans to maintain the code. They must be able to understand all of it quickly and completely.
-- Document intent and purpose within docstrings and comments.
+## 1. General
+
+### 1.1 The big 4 principles (based on forrestchang/andrej-karpathy-skills)
+
+1. **Think before coding.** State your assumptions and uncertanaties explicitly. Provide trade-off decisions to the user.
+
+2. **Simplicity first.** No abstractions for single-use code; no extra "flexibility" or contingency handling that wasn't requested. Ask yourself if a senior engineer say "this is overcomplicated"; if yes, simplify.
+
+3. **Surgical edits** Touch only what you must. Clean up only your own mess. _Mention_ issues you see. If you create orphans or externalities, you can fix or mention them. Every changed line should trace directly to the user's request.
+
+4. **Goal-Driven Execution** When you are ready to implement, use this general strategy: define success criteria, then loop until verified.
+
+Transform tasks into verifiable goals:
+- User: "Add validation" → Agent: Write tests for invalid inputs, then make them pass
+- User: "Fix the bug" → Write a test that reproduces it, then make it pass
+- User: "Refactor X" → Ensure tests pass before and after
+
+For multi-step tasks, state a brief plan:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+### 1.2 Philosophy
+
+- Consider multiple levels of abstraction. Zoom out for context and organization, and zoom in for algorithms and details.
+- Be more than just a code bot; be a collaborator. Fluidly transition between roles like senior advisor, clever PhD, project manager, software dev, and various engineering roles.
+- Prioritize clarity. Expect humans to maintain the code; make it easy for them.
+- Prioritize reproducibility. Inputs and outputs should be narrowly typed. "Explicit is better than implicit" is the law.
+- Opinions and plans should precede organization, not the other way around. If organizational complexity is emerges without an explicit plan, then it should at least be described.
+- Simple and flat is easy to debug. Clever and hierarchical is hard to debug. Debugging is inevitable.
+- How did you get here? If you find yourself handling contingencies, fallbacks, and input sanitization, reconsider organization at a higher level of abstraction.
+- This is the real-world, and is out of your training distribution. There might not be an ideal solution. You might not have sufficient information. You were trained to 'one-shot' solutions; here, it is wiser to make careful incremental progress over multiple steps.
+
+### 1.3 Tips
+
+- Document the intent and purpose of code blocks, functions, classes, and scripts within docstrings and inline comments.
 - Remind yourself of the big picture and overall goals often. This will help keep work organized and directed.
 - Keep users informed: print meaningful progress messages, discovered resources, and changes in workflow.
-- Simple and flat is easy to debug. Clever and hierarchical is hard to debug. Debugging is inevitable.
-- Think about downstream applications and purpose. Be more than just a code bot; be a collaborating scientist and engineer. You have a broader knowledge base than the user; inform them about what is known, what tools exist, and how others have solved problems.
+- Think about downstream applications and purpose. Be more than just a code bot; be a collaborator. You have a broader knowledge base than the user; inform them about what is known, what tools exist, and how others have solved problems.
 - Avoid sanitization! Form opinions and expectations about data, and assert that the data conform to your specifications. Duck-typing, input variable santizing, and trying to handle contingencies results in _silent errors_ and unexpected outputs. Try/except blocks are generally evil. Err towards being too explicit, too typed, and too declarative.
 - Avoid fallbacks! If a function call fails, it is better to let it fail than to try and handle it in some way. This is especially true for library calls. If you don't know what to do, ask the user.
+- Ask questions. You have incomplete knowledge. If you find yourself uncertain, pause, think, and ask for clarity.
 
 ---
 
 ## 2. Libraries
-- Someone else has probably solved your problem already. Opt to use third-party libraries or repos whenever possible.
-- Libraries are great at low levels for clever algorithms (i.e., numpy), and also for structuring workflows (sklearn models all have `.fit`, `.transform` methods; darts models all use `series`, `past_covariates`, `future_covariates` input args; torch uses `(B, C, H, W)` for indexing all images).
+
+- Someone else has probably solved your problem already. Use third-party libraries or repos whenever possible.
+- Libraries are great at low level clever algorithms (i.e., numpy), and also for structuring workflows (sklearn models all have `.fit`, `.transform` methods; darts models all use `series`, `past_covariates`, `future_covariates` input args; torch uses `(B, C, H, W)` for indexing all images).
 - Search for libraries, assess their quality, and either add them as a dependency or copy and reference their underlying code. Look for small and new repos as well. Active repo/codebase maintenance is good, well-reputed organizations/people are good, documentation is good. Sometimes, we can't be picky and just need to use what exists.
 
 ---
@@ -279,11 +315,19 @@ def apply_residual_config(dino, config):
 ---
 
 ## 10. Known Difficulties (LLM Failure Modes)
-- Context is limited; self-prompt to retain important info.
-- You want to be generally applicable. I want to be specific. You have a tendency to be vague. I have a tendency to be narrow-minded. Bridge this gap by identifying the underlying goal and providing more narrowly-tailored responses.
-- Do not invent or change config fields, directories, functions, call signatures, comments (even "TODO"s), or infrastructure without prominently noting it. Unless making intentional and noted changes, copy surrounding code verbatim.
-- If you provide code, then you see later with changes applied, assume that those changes were made by a user and are very important.
-- Ask when uncertain. Do not guess or hallucinate.
+- Context is limited. Know your limitations and self-prompt to retain important info.
+- You want to be generally applicable. I want to be specific. You have a tendency to be vague. I have a tendency to be narrow-minded. Bridge this gap by identifying the underlying goal.
+- Do not invent or change config fields, directories, functions, call signatures, comments (even "TODO"s), or infrastructure without asking the user first and then prominently noting it.
+- If you provide or edit some piece of code, but then you see it later with changes applied, assume that those changes were made by a user, are very important, and shouldn't be reverted back.
+- Hallucination is still a problem. Don't make assumptions on the user's behalf without checking with them first.
+
+### 10.1 Quotes from Andrej Karpathy
+
+> "The models make wrong assumptions on your behalf and just run along with them without checking. They don't manage their confusion, don't seek clarifications, don't surface inconsistencies, don't present tradeoffs, don't push back when they should."
+
+> "They really like to overcomplicate code and APIs, bloat abstractions, don't clean up dead code... implement a bloated construction over 1000 lines when 100 would do."
+
+> "They still sometimes change/remove comments and code they don't sufficiently understand as side effects, even if orthogonal to the task."
 
 ---
 
