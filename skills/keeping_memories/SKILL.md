@@ -45,6 +45,7 @@ Actionable advice for common pitfalls and self-analysis of your own behavior.
 3. **Keep it scannable** - Use tables, code blocks, and bullet points
 4. **Update the status table** - Track what's done vs pending
 5. **Add tips as you learn them** - Future agents will thank you
+6. **Track artifact placement** - Record where large outputs are stored (`agent_assets` vs `<temp_data_dir>`) and why
 
 ## Location
 
