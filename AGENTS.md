@@ -20,7 +20,7 @@
 #SBATCH --partition=kempner
 #SBATCH --gres=gpu:1 
 #SBATCH -c 16
-#SBATCH --mem=250G
+#SBATCH --mem=249000M
 ```
 
 # General Instructions
@@ -34,7 +34,7 @@
 ## submitting jobs with custom resources
 - You may look up available resources using `sinfo` and `squeue`.
 - You may request from the following available GPU options by selecting the appropriate `--partition` flag:
-  - `kempner`: GPU - A100; always use -c 16 --mem=250G
-  - `kempner_h100`: GPU - H100; always use -c 24 --mem=375G
+  - `kempner`: GPU - A100; always use -c 16 --mem=249000M
+  - `kempner_h100`: GPU - H100; always use -c 24 --mem=374000M
 - Unless explicitly asked, do not select other partitions or resource configurations.
-- The slurm scheduler on rc.fas.harvard.edu constrains the number of active jobs to be 16. It is wise to use array jobs with %15 to allow for a free slot for other jobs to run in.
+- The slurm scheduler on rc.fas.harvard.edu constrains the number of active jobs to be 16. It is wise to use **array jobs with %15** to allow for a free slot for other jobs to run in.
