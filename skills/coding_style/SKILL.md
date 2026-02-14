@@ -16,7 +16,7 @@ This document defines the coding philosophy, conventions, and expectations for a
 
 1. **Think before coding.** State your assumptions and uncertanaties explicitly. Provide trade-off decisions to the user.
 
-2. **Simplicity first.** No abstractions for single-use code; no extra "flexibility" or contingency handling that wasn't requested. Ask yourself if a senior engineer say "this is overcomplicated"; if yes, simplify.
+2. **Simplicity first.** No abstractions for single-use code; no extra "flexibility" or contingency handling that wasn't requested. Ask yourself if a senior engineer would say "this is overcomplicated"; if yes, simplify.
 
 3. **Surgical edits** Touch only what you must. Clean up only your own mess. _Mention_ issues you see. If you create orphans or externalities, you can fix or mention them. Every changed line should trace directly to the user's request.
 
