@@ -27,7 +27,7 @@
 ## running code
 - You are encouraged to run code.
 - After generating code, you are encouraged to try running and debugging on your own.
-- For running code, ensure that you are on the compute node using `ssh <compute_node_name>` in the appropriate conda environment: `conda activate <conda_env_name>`. Do not run code on the login node.
+- For running code on remote, ensure that you are on the compute node using `ssh <compute_node_name>` in the appropriate conda environment: `conda activate <conda_env_name>`. Do not run code on the login node.
 - It is wise to always check what the current compute node is before starting new jobs as it may have changed since the last time you checked.
 - If you are running on a remote node (see `remote` value), do not run compute intensive jobs on the login node. For running compute intensive jobs, ssh into `<compute_node>` first.
 
