@@ -23,7 +23,8 @@ Adjust the following `rcParams` settings as needed to ensure consistent typograp
 from matplotlib import rcParams
 rcParams.update({
     'font.family': 'Arial',
-    'svg.fonttype': 'none', ## this is critical for editable text in Illustrator;
+    'svg.fonttype': 'none', ## critical for editable text in Illustrator
+    'pdf.fonttype': 42, ## TrueType — critical for editable text in PDF/Illustrator
     'font.size': 8,
     'axes.labelsize': 8,
     'xtick.labelsize': 8,
@@ -50,9 +51,18 @@ rcParams.update({
 
 ## Lines
 
-- Default line width: 1 pt 
+- Default line width: 1 pt
 - Use solid lines. Avoid dashes unless absolutely necessary for accessibility on a single overlaid axis.
 - When overlaying two methods/conditions, try to differentiate with color and reduce opacity of the secondary trace (~0.7) rather than using dashes.
+
+## Transparency and opacity
+
+- Use alpha/transparency **sparingly**. It is difficult to increase opacity post-hoc in Illustrator.
+
+## Colormaps and normalization
+
+- Use **perceptually uniform** colormaps (e.g., `viridis`) unless there is a strong reason not to. Dichromatic colormaps are also good.
+- For comparison across panels, use **shared normalization** (same `vmin`/`vmax`). Document if per-panel normalization is used.
 
 ## Images and spatial maps
 
@@ -64,11 +74,14 @@ rcParams.update({
 
 - **Minimize whitespace**. Use `gridspec` with tight `hspace`/`wspace` (0.05-0.15 common).
 - Size the figure with the expectation that it will go into a manuscript in 8.5 x 11 letter format. Generally, this either means narrow enough to fit text to the side or taking up the entire width of the available page space.
-- `bbox_inches='tight'` on all saves to eliminate outer margins.
+## Bar and summary plots
+
+- **Overlay individual data points** on bars/means to show the underlying distribution. Use small markers with jitter and slight transparency (e.g., `s=12, alpha=0.7`).
+- Include **error bars** (SEM or CI) on summary statistics.
 
 ## Rasterization for performance
 
-Identify scatter plots and image overlays with many (>1k) points. These elements produce thousands of vector paths and make PDFs slow to render. Ask the user if they'd like to use `rasterized=True` on heavy artists to embed them as bitmaps while keeping everything else as vectors:
+Identify scatter plots and image overlays with many (>1k) points. These elements produce thousands of vector paths and make SVGs/PDFs slow to render (watch for SVGs exceeding ~10 MB). Ask the user if they'd like to use `rasterized=True` on heavy artists to embed them as bitmaps while keeping text and axes as vectors:
 
 ```python
 ax.imshow(img, rasterized=True)
@@ -79,5 +92,15 @@ The `dpi` argument in `savefig` controls the resolution of rasterized elements. 
 
 ## Output
 
-- Always save **PNG** (600 dpi), **SVG**, and **PDF** (all with `dpi=600, bbox_inches='tight'`).
+- Always save **PNG** (600 dpi), **SVG**, and **PDF** (all with `dpi=600, bbox_inches='tight', pad_inches=0.1, transparent=False`). If the figure is very large, prompt the user for guidance on DPI.
+- Save into **hierarchical subfolders named after the analysis**, e.g., `figures/consistency_curves/barplot_means`.
+- SVG is the editable master for Illustrator; PNG is the raster preview.
+- Expect figures will be edited in Adobe Illustrator, included in LaTeX manuscripts, and submitted to journals.
 - For LaTeX embedding, convert SVG to PDF using the `latex-pdf-preprocess` skill.
+
+## Recommended helper
+
+- Use `bnpm.plotting_helpers.Figure_Saver` when available:
+  - `format_save=['svg', 'png']`
+  - `svg_fontType='none'`
+  - `kwargs_savefig={'dpi': 600, 'bbox_inches': 'tight', 'pad_inches': 0.1, 'transparent': False}`

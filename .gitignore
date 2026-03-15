@@ -2,3 +2,5 @@ __pycache__/
 agent_assets/
 *.out
 *.err
+.DS_Store
+tmp/
