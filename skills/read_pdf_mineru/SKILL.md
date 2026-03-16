@@ -1,9 +1,9 @@
 ---
-name: read-scientific-pdfs-mineru
-description: Extract scientific PDFs to lossless Markdown using MinerU. Assumes a pre-existing conda env named "mineru".
+name: read_pdf_mineru
+description: Extract scientific journal article PDFs to lossless Markdown using MinerU. Assumes a pre-existing conda env named "mineru".
 ---
 
-# read-scientific-pdfs-mineru
+# read_pdf_mineru
 
 Goal: convert PDFs to Markdown as losslessly as possible (no summarization). This skill assumes a conda env named `mineru` already exists. If it doesn’t, **stop** and tell the user what is missing (create the env + install MinerU) and do not attempt installs.
 
@@ -19,7 +19,7 @@ Save the source PDF under `agent_assets/<project_name>/artifacts/pdf_conversions
 ```bash
 SKILLS_DIR="$(readlink -f .agent/skills)"
 conda activate mineru
-python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
+python "$SKILLS_DIR/read_pdf_mineru/scripts/mineru_extract.py" \
   --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
@@ -48,7 +48,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate mineru
 
 SKILLS_DIR="$(readlink -f .agent/skills)"
-python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
+python "$SKILLS_DIR/read_pdf_mineru/scripts/mineru_extract.py" \
   --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
@@ -69,7 +69,7 @@ ssh <compute_node_name>
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate mineru
 SKILLS_DIR="$(readlink -f .agent/skills)"
-python "$SKILLS_DIR/read-scientific-pdfs-mineru/scripts/mineru_extract.py" \
+python "$SKILLS_DIR/read_pdf_mineru/scripts/mineru_extract.py" \
   --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
