@@ -13,6 +13,14 @@
 - File editing: True
 - Terminal: True
 
+## Git rules
+- commit: False
+- push: False
+- make PR: False
+- other changes: None
+
+If a user asks to make a specific git call, do it, but then privileges immediately reset back to defaults above.
+
 ## SBATCH template
 ```bash
 #SBATCH --account=<account_name>
