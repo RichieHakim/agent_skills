@@ -1,7 +1,7 @@
 ---
-name: figure-formatting
+name: figure_formatting
 description: Guide for styling scientific figures with matplotlib.
-user-invokable: true
+user-invocable: true
 ---
 
 # Figure Formatting
@@ -14,6 +14,30 @@ Style guide for generating publication-ready scientific figures with matplotlib.
 - **Minimum size**: 8 pt for all text including tick labels, axis labels, legends, and annotations.
 - **Titles and labels**: ~10 pt and lowercase except for acronyms (e.g., PCA, EVR, BMI, etc.). This includes axis labels, column headers, and figure titles.
 - **Units**: parenthesized after label, e.g., `frequency (Hz)`, `time (s)`, `(a.u.)`.
+
+## Panel labels
+
+Every multi-panel figure must have panel labels. Add them automatically whenever a figure has more than one axes panel.
+
+- **Main panel labels**: uppercase bold letters (A, B, C, …), 16 pt, Arial, bold. Place in the whitespace above and to the left of each panel using axes-relative coordinates.
+- **Subpanel labels**: when a panel contains subdivisions, label them as e.g. **B(i)**, **B(ii)**, **B(iii)**, **B(iv)**. The letter remains 16 pt bold; the roman numeral suffix is 8 pt, normal weight. Make a judgement call on whether to use subpanel labels; referencing 'left' and 'right' subpanels is often sufficient and avoids clutter.
+
+Below is example code for panel labels; many other configurations are possible depending on the layout of the figure.
+```python
+# Main panel labels
+for ax, label in zip(axes, ['A', 'B', 'C']):
+    ax.text(-0.12, 1.18, label, transform=ax.transAxes,
+            fontsize=16, fontweight='bold', va='top', ha='left',
+            fontfamily='Arial')
+
+# Subpanel label example: B(ii)
+ax.text(-0.12, 1.18, 'B', transform=ax.transAxes,
+        fontsize=16, fontweight='bold', va='top', ha='left',
+        fontfamily='Arial')
+ax.text(-0.12 + 0.06, 1.18, '(ii)', transform=ax.transAxes,
+        fontsize=8, fontweight='normal', va='top', ha='left',
+        fontfamily='Arial')
+```
 
 ## rcParams baseline
 
