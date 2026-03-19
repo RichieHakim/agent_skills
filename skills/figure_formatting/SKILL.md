@@ -10,33 +10,39 @@ Style guide for generating publication-ready scientific figures with matplotlib.
 
 ## Typography
 
-- **Font**: Arial (or Helvetica as fallback).
-- **Minimum size**: 8 pt for all text including tick labels, axis labels, legends, and annotations.
-- **Titles and labels**: ~10 pt and lowercase except for acronyms (e.g., PCA, EVR, BMI, etc.). This includes axis labels, column headers, and figure titles.
+- **Font**: Arial only. Note: On Linux where Arial is unavailable, use `"Nimbus Sans"` as the rendering font (identical metrics), then post-process SVGs to replace with Arial:
+  ```python
+  svg_text = Path("figure.svg").read_text()
+  svg_text = svg_text.replace("Nimbus Sans", "Arial")
+  Path("figure.svg").write_text(svg_text)
+  ```
+- **Minimum size**: 8 pt normal-weight for all text including tick labels, axis labels, legends, and annotations. Never use font sizes smaller than 8 pt; if text doesn't fit, consider how to abbreviate, rotate, remove, or redesign the text or panel layout.
+- **Panel titles**: ~10 pt, bold, lowercase except for acronyms (e.g., PCA, EVR, BMI, etc.). 
+- **Sub-panel titles**: 8 pt, normal weight.
 - **Units**: parenthesized after label, e.g., `frequency (Hz)`, `time (s)`, `(a.u.)`.
 
 ## Panel labels
 
 Every multi-panel figure must have panel labels. Add them automatically whenever a figure has more than one axes panel.
 
-- **Main panel labels**: uppercase bold letters (A, B, C, …), 16 pt, Arial, bold. Place in the whitespace above and to the left of each panel using axes-relative coordinates.
+- **Main panel labels**: uppercase bold letters (A, B, C, …), 16 pt, Arial, bold. Place close to and near the top-left of each panel. Panel labels should be aligned across panels in the same row and column.
 - **Subpanel labels**: when a panel contains subdivisions, label them as e.g. **B(i)**, **B(ii)**, **B(iii)**, **B(iv)**. The letter remains 16 pt bold; the roman numeral suffix is 8 pt, normal weight. Make a judgement call on whether to use subpanel labels; referencing 'left' and 'right' subpanels is often sufficient and avoids clutter.
 
-Below is example code for panel labels; many other configurations are possible depending on the layout of the figure.
+For simple layouts, `ax.transAxes` works:
 ```python
-# Main panel labels
 for ax, label in zip(axes, ['A', 'B', 'C']):
     ax.text(-0.12, 1.18, label, transform=ax.transAxes,
             fontsize=16, fontweight='bold', va='top', ha='left',
             fontfamily='Arial')
+```
 
-# Subpanel label example: B(ii)
-ax.text(-0.12, 1.18, 'B', transform=ax.transAxes,
-        fontsize=16, fontweight='bold', va='top', ha='left',
-        fontfamily='Arial')
-ax.text(-0.12 + 0.06, 1.18, '(ii)', transform=ax.transAxes,
-        fontsize=8, fontweight='normal', va='top', ha='left',
-        fontfamily='Arial')
+For complex layouts with nested gridspecs, use figure coordinates after rendering:
+```python
+fig.canvas.draw()
+pos = ax.get_position()
+fig.text(pos.x0 - 0.03, pos.y1 + 0.02, "A",
+         fontsize=16, fontweight='bold', va='top', ha='left',
+         fontfamily='Arial')
 ```
 
 ## rcParams baseline
@@ -72,11 +78,12 @@ rcParams.update({
 
 - **Remove top and right spines** on line/scatter plots. Only keep left and bottom.
 - Spine and tick width: 0.75 pt.
+- Generally don't use gridlines unless there is a good reason.
 
 ## Lines
 
 - Default line width: 1 pt
-- Use solid lines. Avoid dashes unless absolutely necessary for accessibility on a single overlaid axis.
+- Use solid lines. Avoid dashed lines.
 - When overlaying two methods/conditions, try to differentiate with color and reduce opacity of the secondary trace (~0.7) rather than using dashes.
 
 ## Transparency and opacity
@@ -90,18 +97,39 @@ rcParams.update({
 
 ## Images and spatial maps
 
-- For scientific images, it is recommended to brighten and oversaturate slightly.
-- It is wise to crop images using `set_xlim` / `set_ylim` rather than array slicing (preserves coordinate alignment with scatter data).
-- When images represent different methods/conditions, adding a colored border (spine stroke) to match the legend color can be effective for clarity. Use `ax.spines['bottom'].set_linewidth(2)` and `ax.spines['bottom'].set_color('C0')` (or 'C1', etc.) to achieve this.
+- For scientific images, brighten and oversaturate slightly (`np.clip(img * 1.8, 0, 255)`) for visibility.
+- Crop images using `set_xlim` / `set_ylim` rather than array slicing (preserves coordinate alignment with scatter data).
+- When reference images consider whether to use `rasterized=True`.
+- When images represent different methods/conditions, adding a colored border (spine stroke / border line) to match the legend color can be effective for clarity.
+
+## Line plots
+
+- Aim for a clean look. Generally, avoid point markers unless there is good reason.
+- For statistics: Include each sample line (thin, transparent) as well as summary lines (thick, opaque) and use shaded errorbars without a stroke/border. For example, use `ax.fill_between(x, mean - std, mean + std, color='C0', alpha=0.3, linewidth=0)`. Decide between SEM, STD, and CI.
+
+## Bar and summary plots
+
+- **Overlay individual data points** on bars/means to show the underlying distribution. Use small markers with jitter and slight transparency (e.g., `s=12, alpha=0.7`).
+- Reduce whitespace aggressively. Bars should be close together.
+- Error bars should be a single 2 pt thickness vertical line with no cap.
+- Include error bars (SEM or CI) on summary statistics, and variance bars (STD) for more raw data statistics.
+
+## Legend placement
+
+- For legends with many entries that would overlap data, place below or to the side of the plot.
 
 ## Layout
 
 - **Minimize whitespace**. Use `gridspec` with tight `hspace`/`wspace` (0.05-0.15 common).
 - Size the figure with the expectation that it will go into a manuscript in 8.5 x 11 letter format. Generally, this either means narrow enough to fit text to the side or taking up the entire width of the available page space.
-## Bar and summary plots
-
-- **Overlay individual data points** on bars/means to show the underlying distribution. Use small markers with jitter and slight transparency (e.g., `s=12, alpha=0.7`).
-- Include **error bars** (SEM or CI) on summary statistics.
+- To make a panel shorter than its gridspec allocation, you can use a nested subgridspec with an invisible spacer:
+  ```python
+  gs_inner = gs[0, 2].subgridspec(2, 1, height_ratios=[0.7, 0.3], hspace=0.0)
+  ax = fig.add_subplot(gs_inner[0, 0])
+  ax_spacer = fig.add_subplot(gs_inner[1, 0]); ax_spacer.axis("off")
+  ```
+- For square or fixed-ratio panels, you can use `ax.set_box_aspect(1.0)` (or `0.75` for 25% shorter, etc.).
+- Get creative with layout! Don't be afraid to break out of the standard grid and use `fig.add_axes` for custom placements. Just make sure to maintain consistent styling and alignment.
 
 ## Rasterization for performance
 
@@ -118,9 +146,11 @@ The `dpi` argument in `savefig` controls the resolution of rasterized elements. 
 
 - Always save **PNG** (600 dpi), **SVG**, and **PDF** (all with `dpi=600, bbox_inches='tight', pad_inches=0.1, transparent=False`). If the figure is very large, prompt the user for guidance on DPI.
 - Save into **hierarchical subfolders named after the analysis**, e.g., `figures/consistency_curves/barplot_means`.
+- After every render, visually inspect for correctness, layout, and style. Common issues include whitespace, overlapping text, and misaligned panels. Debug in a loop a few times until the figure looks right or ask for help if you're stuck.
 - SVG is the editable master for Illustrator; PNG is the raster preview.
 - Expect figures will be edited in Adobe Illustrator, included in LaTeX manuscripts, and submitted to journals.
 - For LaTeX embedding, convert SVG to PDF using the `latex-pdf-preprocess` skill.
+- If possible, prepare the data used in the figure and plotting code to allow for portability and easy regeneration in the future.
 
 ## Recommended helper
 
