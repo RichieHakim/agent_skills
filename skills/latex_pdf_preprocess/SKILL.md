@@ -1,7 +1,7 @@
 ---
-name: latex-pdf-preprocess
+name: latex_pdf_preprocess
 description: Tool for preparing PDF figure files for embedding in LaTeX (e.g., with \includegraphics).
-user-invokable: true
+user-invocable: true
 ---
 
 # LaTeX PDF Figure Preprocessing
