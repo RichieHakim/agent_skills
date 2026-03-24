@@ -50,7 +50,24 @@ Works for `.ai`, `.svg`, `.pdf`, `.eps`.
 
 ## Exporting PDFs for LaTeX embedding
 
-You can use `export_pdf` or a JSX script. These settings produce XeLaTeX-safe PDFs directly (no post-processing needed):
+**Preferred: use the MCP `export_pdf` tool.** It clips to the artboard, doesn't change the active document path, and produces XeLaTeX-safe output with default settings:
+
+```
+export_pdf(output_path="/path/to/figure.pdf", options={trim_marks: false, registration_marks: false, color_bars: false, page_information: false, bleed: false})
+```
+
+Verify the output is XeLaTeX-safe with pikepdf:
+```python
+import pikepdf
+pdf = pikepdf.open("figure.pdf")
+for page in pdf.pages:
+    if "/Group" in page and "/CS" in page["/Group"]:
+        cs = page["/Group"]["/CS"]
+        assert not isinstance(cs, pikepdf.Array), f"ICC ref found — run latex_pdf_preprocess skill"
+print("OK")
+```
+
+**Fallback: JSX script via osascript.** Use this if you need finer control over PDF settings. Note that `saveAs` changes the active document path as a side effect.
 
 ```javascript
 var opts = new PDFSaveOptions();
@@ -65,7 +82,7 @@ opts.pageInformation = false;
 opts.bleedOffsetRect = [0, 0, 0, 0];
 ```
 
-The key settings are `ACROBAT7` + `preserveEditability = false` — this writes `/DeviceRGB` in the page transparency group instead of an ICC stream reference, which avoids the xdvipdfmx crash. Do **not** use named presets like `[PDF/X-4:2008]` or `[Smallest File Size]` — those embed ICC profiles that break xdvipdfmx. If a PDF was exported with a preset, use the `latex_pdf_preprocess` skill to fix it after the fact.
+The key settings are `ACROBAT7` + `preserveEditability = false` — this writes `/DeviceRGB` in the page transparency group instead of an ICC stream reference, avoiding the xdvipdfmx crash. Do **not** use named presets like `[PDF/X-4:2008]` or `[Smallest File Size]` — those embed ICC profiles that break xdvipdfmx. If a PDF was exported with a preset, use the `latex_pdf_preprocess` skill to fix it after the fact.
 
 ## Setup
 
