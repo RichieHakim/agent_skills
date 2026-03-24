@@ -6,73 +6,99 @@ user-invocable: true
 
 # LaTeX PDF Figure Preprocessing
 
-Normalize a PDF figure so it embeds cleanly in LaTeX with pdflatex, xelatex, and lualatex.
+Fix PDF figures (especially from Adobe Illustrator) so they embed cleanly in xelatex.
 
-## Why two steps?
+## The problem
 
-Ghostscript alone (`pdf -> gs -> pdf`) preserves certain internal PDF structures (indirect object references from Illustrator, transparency groups) that crash **xdvipdfmx** (the PDF backend for xelatex) with:
+Adobe Illustrator exports PDFs with ICC-based color profiles as indirect stream references inside page-level transparency groups. **xdvipdfmx** (xelatex's PDF backend) crashes on these:
 
 ```
 Assertion failed: (!indirect->pf), function write_indirect, file pdfobj.c
 ```
 
-The fix is to round-trip through PostScript first (`pdf -> pdftops -> ps -> gs -> pdf`). The `pdftops` step strips the problematic structures; the `gs` step then normalizes fonts, color spaces, and PDF version.
+## The fix
+
+Replace the ICC color space reference in the page-level transparency `/Group` with `/DeviceRGB`. This is a single metadata swap — no rasterization, no PostScript roundtrip, no content changes. Transparency and blending are fully preserved.
 
 ## Core Command
 
-```bash
-pdftops input.pdf /tmp/_latex_preprocess.ps
-gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite \
-  -dCompatibilityLevel=1.4 \
-  -dPDFSETTINGS=/prepress \
-  -sOutputFile=output.pdf \
-  /tmp/_latex_preprocess.ps
-rm /tmp/_latex_preprocess.ps
+```python
+import pikepdf, sys
+
+pdf = pikepdf.open(sys.argv[1])
+for page in pdf.pages:
+    if "/Group" in page:
+        g = page["/Group"]
+        if "/CS" in g and isinstance(g["/CS"], pikepdf.Array):
+            g["/CS"] = pikepdf.Name("/DeviceRGB")
+pdf.save(sys.argv[2])
 ```
 
-- **`-dCompatibilityLevel=1.4`** — PDF 1.4, compatible with all TeX engines
-- **`-dPDFSETTINGS=/prepress`** — high quality: embeds all fonts, preserves resolution
-- Output is saved as `<name>_latex.pdf` alongside the original
+Usage:
+```bash
+python3 fix_pdf.py input.pdf output.pdf
+```
 
 ## Batch Processing
 
-```bash
-for f in figures/*/figure.pdf; do
-  out="${f%.pdf}_latex.pdf"
-  pdftops "$f" /tmp/_lpp.ps && \
-  gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite \
-    -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress \
-    -sOutputFile="$out" /tmp/_lpp.ps && \
-  rm /tmp/_lpp.ps && \
-  echo "OK: $out" || echo "FAIL: $f"
-done
+```python
+import pikepdf, os
+
+for d in sorted(os.listdir("figures")):
+    fpath = os.path.join("figures", d, "figure.pdf")
+    if not os.path.isfile(fpath):
+        continue
+    pdf = pikepdf.open(fpath)
+    fixed = False
+    for page in pdf.pages:
+        if "/Group" in page:
+            g = page["/Group"]
+            if "/CS" in g and isinstance(g["/CS"], pikepdf.Array):
+                g["/CS"] = pikepdf.Name("/DeviceRGB")
+                fixed = True
+    if fixed:
+        tmp = fpath + ".tmp"
+        pdf.save(tmp)
+        pdf.close()
+        os.replace(tmp, fpath)
+        print(f"Fixed: {d}")
+    else:
+        pdf.close()
+        print(f"OK:    {d} (no ICC group)")
 ```
 
 ## Dependencies
 
-Requires `poppler-utils` (for `pdftops`) and `ghostscript` (for `gs`):
 ```bash
-brew install poppler ghostscript   # macOS
-sudo apt install poppler-utils ghostscript  # Linux
-```
-
-Check they're installed:
-```bash
-which pdftops gs && gs --version
+pip install pikepdf
 ```
 
 ## Verifying the Output
 
 ```bash
-# Check PDF version is 1.4 and page dimensions are preserved
-pdfinfo output.pdf | grep -E 'PDF version|Pages|Page size'
+# Page dimensions should be identical
+pdfinfo input.pdf | grep 'Page size'
+pdfinfo output.pdf | grep 'Page size'
 ```
 
-## Common Errors This Fixes
+Or confirm the fix programmatically:
+```python
+import pikepdf
+pdf = pikepdf.open("output.pdf")
+for page in pdf.pages:
+    if "/Group" in page and "/CS" in page["/Group"]:
+        cs = page["/Group"]["/CS"]
+        assert cs == pikepdf.Name("/DeviceRGB"), f"Still ICC: {cs}"
+print("OK")
+```
 
-| Error | Cause | Fixed by |
-|-------|-------|----------|
-| `Assertion failed: (!indirect->pf)` in xdvipdfmx | Illustrator indirect object refs | PostScript roundtrip strips them |
-| `PDF inclusion: found PDF version <1.x>, but at most 1.5 allowed` | PDF version too new | `-dCompatibilityLevel=1.4` |
-| Transparency artifacts or white boxes | Live transparency | `pdftops` flattens it |
-| Missing glyphs / font substitution | Fonts not embedded | `/prepress` embeds all fonts |
+## What this does NOT do
+
+- Does not rasterize anything — vectors, images, and text are untouched
+- Does not change PDF version
+- Does not flatten transparency — blending modes and opacity are preserved
+- Does not touch Form XObject groups (only the page-level group needs fixing)
+
+## Background
+
+The page-level `/Group` dictionary controls the transparency blending color space for the entire page. Illustrator sets this to `[/ICCBased <stream>]` where the stream is an embedded sRGB ICC profile. xdvipdfmx crashes when it encounters this indirect stream reference during PDF output. Replacing it with the equivalent `/DeviceRGB` name avoids the indirect reference while preserving identical color behavior (the ICC profile is sRGB).
