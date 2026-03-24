@@ -79,6 +79,7 @@ rcParams.update({
 - **Remove top and right spines** on line/scatter plots. Only keep left and bottom.
 - Spine and tick width: 0.75 pt.
 - Generally don't use gridlines unless there is a good reason.
+- **Axis ranges:** Strongly consider whether to bound the x/y axis ranges to more meaningful limits (e.g., 0 to 1, -100% to 100%, etc.) 
 
 ## Lines
 
@@ -116,12 +117,13 @@ rcParams.update({
 
 ## Legend placement
 
-- For legends with many entries that would overlap data, place below or to the side of the plot.
+- For legends with many entries that would overlap data, place below, to the side, or in a low-data region of the plot. For precise placement, you can use `bbox_to_anchor` with axes-fraction coordinates.
 
 ## Layout
 
 - **Minimize whitespace**. Use `gridspec` with tight `hspace`/`wspace` (0.05-0.15 common).
 - Size the figure with the expectation that it will go into a manuscript in 8.5 x 11 letter format. Generally, this either means narrow enough to fit text to the side or taking up the entire width of the available page space.
+- **Figure size vs. text size**: `figsize` controls the plot area in inches; `rcParams` text sizes are absolute in points. Changing `figsize` doesn't change the text size.
 - To make a panel shorter than its gridspec allocation, you can use a nested subgridspec with an invisible spacer:
   ```python
   gs_inner = gs[0, 2].subgridspec(2, 1, height_ratios=[0.7, 0.3], hspace=0.0)
