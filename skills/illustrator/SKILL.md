@@ -6,7 +6,7 @@ user-invocable: true
 
 # Adobe Illustrator via Claude Code
 
-Note that this is an early draft of a skill. You should not rely on it alone; expect to dig deep into the MCP tool docs and code to learn how to solve problems.
+Note that this is an early draft of a skill. You should not rely on it alone; expect to dig deep into the MCP tool docs and code to learn how to solve problems. Feel free to suggest improvements to the skill (additions, subtractions, organization) as you use it.
 
 The intention of these tools is to structure interactions with Adobe Illustrator, and is oriented towards scientific figure production.
 
