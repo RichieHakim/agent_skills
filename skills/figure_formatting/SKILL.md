@@ -152,6 +152,7 @@ The `dpi` argument in `savefig` controls the resolution of rasterized elements. 
 - SVG is the editable master for Illustrator; PNG is the raster preview.
 - Expect figures will be edited in Adobe Illustrator, included in LaTeX manuscripts, and submitted to journals.
 - For LaTeX embedding, convert SVG to PDF using the `latex-pdf-preprocess` skill.
+- If a PDF has excess whitespace (e.g., from Illustrator artboard being larger than artwork), crop with `pdfcrop --margins 2 input.pdf output.pdf` (margin in bp, 1bp = 1/72 inch).
 - If possible, prepare the data used in the figure and plotting code to allow for portability and easy regeneration in the future.
 
 ## Recommended helper

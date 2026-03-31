@@ -92,6 +92,23 @@ for page in pdf.pages:
 print("OK")
 ```
 
+## Cropping whitespace
+
+PDF figures (especially from Illustrator) often have excess whitespace from the artboard being larger than the artwork. Use `pdfcrop` (ships with TeX Live) to trim to content bounds:
+
+```bash
+pdfcrop --margins 2 input.pdf output.pdf
+```
+
+The `--margins` value is in bp (1bp = 1/72 inch). A small margin (1–2bp) prevents clipping artifacts at content edges.
+
+Batch crop:
+```bash
+for f in figures/*.pdf; do
+    pdfcrop --margins 2 "$f" "${f%.pdf}_cropped.pdf" && mv "${f%.pdf}_cropped.pdf" "$f"
+done
+```
+
 ## What this does NOT do
 
 - Does not rasterize anything — vectors, images, and text are untouched
