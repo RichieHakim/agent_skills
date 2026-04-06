@@ -6,6 +6,7 @@
 - <compute_node_resources>: 'gpu:h100, cpu:24, mem:360G'
 - <temp_data_dir>: /n/netscratch/bsabatini_lab/Lab/rhakim/temp
 - <account_name>: 'kempner_rhakim_lab'
+- <agent_assets_meta_directory>: '/n/holylabs/kempner_rhakim_lab/Lab/rhakim/agent_assets/<repo>/' (symlink target for the repo's `agent_assets/` — see `agent_guide` SKILL.md for setup/usage)
 
 ## agent access
 - Internet: True

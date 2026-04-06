@@ -7,7 +7,7 @@ description: Rules and guidelines for agents
 
 ## Workflow
 
-1. Read top-level `AGENTS.md`; run `keeping_memories` skill.
+1. Read `agent_environment.md` (bundled with this skill); run `keeping_memories` skill.
 2. Find or create `agent_assets/<conversation_topic>/` with `MEMORIES.md`, `code/`, and `artifacts/`.
 3. Read relevant prior agentic work:
    - Existing `agent_assets/**/MEMORIES.md` files that are relevant
@@ -40,6 +40,16 @@ agent_assets/
 - `code/`: one-off scripts or utilities used only by the agent.
 - `artifacts/`: logs, plots, manifests, README.md files, plan md files, LaTeX files/projects, paper pdfs, and test outputs. Stay organized and refactor with subdirectories as needed.
 
+## `agent_assets/` is a symlink
+
+`agent_assets/` is a symlink to permanent storage (`<agent_assets_meta_directory>`) so `$HOME` doesn't fill up. Resolve with `readlink agent_assets`.
+
+- **If missing:** `mkdir -p <agent_assets_meta_directory> && ln -s <agent_assets_meta_directory> agent_assets`
+- Don't delete, replace, or "fix" the symlink.
+- Use `find -L` to traverse it
+- Permissions/group are inherited from the target filesystem.
+- Ensure `agent_assets/` is in `.gitignore`.
+
 ## If first-time onboarding
 
 - Spend extra effort mapping out the repository.
@@ -61,4 +71,4 @@ agent_assets/
 - **Ask questions** if clarification could help.
 - **Store artifacts** liberally.
   - Lightweight artifacts (i.e., notes, plots, logs) go in `agent_assets/`.
-  - Large or permanent artifacts (i.e., `.npy`, models) go to `<temp_data_dir>` when defined in `AGENTS.md`.
+  - Large or permanent artifacts (i.e., `.npy`, models) go to `<temp_data_dir>` which is defined in `agent_environment.md`.
