@@ -63,7 +63,7 @@ pdf = pikepdf.open("figure.pdf")
 for page in pdf.pages:
     if "/Group" in page and "/CS" in page["/Group"]:
         cs = page["/Group"]["/CS"]
-        assert not isinstance(cs, pikepdf.Array), f"ICC ref found — run latex_pdf_preprocess skill"
+        assert not isinstance(cs, pikepdf.Array), f"ICC ref found — run latex-pdf-preprocess skill"
 print("OK")
 ```
 
@@ -82,7 +82,7 @@ opts.pageInformation = false;
 opts.bleedOffsetRect = [0, 0, 0, 0];
 ```
 
-The key settings are `ACROBAT7` + `preserveEditability = false` — this writes `/DeviceRGB` in the page transparency group instead of an ICC stream reference, avoiding the xdvipdfmx crash. Do **not** use named presets like `[PDF/X-4:2008]` or `[Smallest File Size]` — those embed ICC profiles that break xdvipdfmx. If a PDF was exported with a preset, use the `latex_pdf_preprocess` skill to fix it after the fact.
+The key settings are `ACROBAT7` + `preserveEditability = false` — this writes `/DeviceRGB` in the page transparency group instead of an ICC stream reference, avoiding the xdvipdfmx crash. Do **not** use named presets like `[PDF/X-4:2008]` or `[Smallest File Size]` — those embed ICC profiles that break xdvipdfmx. If a PDF was exported with a preset, use the `latex-pdf-preprocess` skill to fix it after the fact.
 
 ## Setup
 

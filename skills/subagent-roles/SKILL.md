@@ -1,6 +1,6 @@
 ---
-name: subagent_roles
-description: Subagent roles and the dispatch patterns.
+name: subagent-roles
+description: Subagent roles and the dispatch pattern.
 ---
 
 # Subagent Roles
@@ -12,7 +12,7 @@ A **switchboard**: pick a role, dispatch a subagent with it. Roles are *suggesti
 Every dispatch prompt MUST include:
 
 1. **Role.** `Act as <role_name>.`
-2. **Skills.** `Load agent_guide, then this role's skills: <list>.`
+2. **Skills.** `Load agent-guide, then this role's skills: <list>.`
 3. **Briefing.** Inline context, or pointers to specific `## Section` anchors in the manager's `MEMORIES.md` (flag it as living/actively updated).
 4. **Task.** Scoped small. Exact paths, commands, deliverables.
 5. **Response shape.** Verbosity cap and format. Default: *<200 words; what you did / findings / artifacts / uncertainties*.
@@ -23,38 +23,38 @@ Every dispatch prompt MUST include:
 
 ## Roles
 
-`agent_guide` is always loaded alongside the skills below.
+`agent-guide` is always loaded alongside the skills below.
 
-### `data_analyst`
-- **Skills:** `xlsx`, `figure_formatting`, `coding_style`
+### `data-analyst`
+- **Skills:** `xlsx`, `figure-formatting`, `coding-style`
 - **When:** analyze spreadsheets, compute stats, produce plots.
 
-### `script_refactorer`
-- **Skills:** `convert_scientific_notebook_to_script`, `coding_style`
+### `script-refactorer`
+- **Skills:** `notebook-to-script`, `script-opinions`, `coding-style`
 - **When:** turn notebooks into HPC/batch-safe scripts.
 
-### `slurm_dispatcher`
-- **Skills:** `convert_script_to_slurm_runs`, `coding_style`
+### `slurm-dispatcher`
+- **Skills:** `slurm-dispatch`, `script-opinions`, `coding-style`
 - **When:** package scripts for SLURM, launch array jobs (use `%15`).
 
-### `literature_reviewer`
-- **Skills:** `read_pdf_mineru`
+### `literature-reviewer`
+- **Skills:** `read-pdf-mineru`
 - **When:** extract and summarize scientific PDFs.
 
-### `manuscript_writer`
-- **Skills:** `latex_manuscript`, `latex_pdf_preprocess`, `illustrator`, `figure_formatting`
+### `manuscript-writer`
+- **Skills:** `latex-manuscript`, `latex-pdf-preprocess`, `illustrator`, `figure-formatting`
 - **When:** draft/format manuscript sections, prepare figures, build PDFs.
 
-### `code_reviewer`
-- **Skills:** `coding_style`, `simplify`
+### `code-reviewer`
+- **Skills:** `coding-style`, `simplify`
 - **When:** review diffs for style, complexity, correctness.
 
-### `sub_manager`
-- **Skills:** `manager`, `subagent_roles`, `keeping_memories`
+### `sub-manager`
+- **Skills:** `manager`, `subagent-roles`, `keeping-memories`
 - **When:** open-ended decomposition that would flood the parent's context.
 - **Workspace:** `agent_assets/<topic>/subagents/<sub_topic>/` with its own `MEMORIES.md`, `code/`, `artifacts/`.
 - **Hierarchy:** allowed only if parent depth < `<max_subagent_depth>` (see `manager`).
 
 ## Adding new roles
 
-New `### <role_name>` section with **Skills** and **When**. Add when a pattern repeats; remove when unused.
+New `### <role-name>` section with **Skills** and **When**. Add when a pattern repeats; remove when unused.

@@ -1,5 +1,5 @@
 ---
-name: agent_guide
+name: agent-guide
 description: Rules and guidelines for agents
 ---
 
@@ -7,7 +7,7 @@ description: Rules and guidelines for agents
 
 ## Workflow
 
-1. Read `agent_environment.md` (bundled with this skill); run `keeping_memories` skill.
+1. Read `agent-environment.md` (bundled with this skill); run `keeping-memories` skill.
 2. Find or create `agent_assets/<conversation_topic>/` with `MEMORIES.md`, `code/`, and `artifacts/`.
 3. Read relevant prior agentic work:
    - Existing `agent_assets/**/MEMORIES.md` files that are relevant
@@ -71,4 +71,4 @@ agent_assets/
 - **Ask questions** if clarification could help.
 - **Store artifacts** liberally.
   - Lightweight artifacts (i.e., notes, plots, logs) go in `agent_assets/`.
-  - Large or permanent artifacts (i.e., `.npy`, models) go to `<temp_data_dir>` which is defined in `agent_environment.md`.
+  - Large or permanent artifacts (i.e., `.npy`, models) go to `<temp_data_dir>` which is defined in `agent-environment.md`.

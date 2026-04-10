@@ -1,5 +1,5 @@
 ---
-name: latex_manuscript
+name: latex-manuscript
 description: Patterns for efficiently working in LaTeX manuscript repositories — ingesting structure, viewing figures, reading reviewer comments, and making edits.
 user-invocable: true
 ---

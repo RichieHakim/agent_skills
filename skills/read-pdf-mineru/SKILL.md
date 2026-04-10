@@ -1,9 +1,9 @@
 ---
-name: read_pdf_mineru
+name: read-pdf-mineru
 description: Extract scientific journal article PDFs to lossless Markdown using MinerU. Assumes a pre-existing conda env named "mineru".
 ---
 
-# read_pdf_mineru
+# read-pdf-mineru
 
 Goal: convert PDFs to Markdown as losslessly as possible (no summarization). This skill assumes a conda env named `mineru` already exists. If it doesn’t, **stop** and tell the user what is missing (create the env + install MinerU) and do not attempt installs.
 
@@ -19,7 +19,7 @@ Save the source PDF under `agent_assets/<project_name>/artifacts/pdf_conversions
 ```bash
 SKILLS_DIR="$(readlink -f .agent/skills)"
 conda activate mineru
-python "$SKILLS_DIR/read_pdf_mineru/scripts/mineru_extract.py" \
+python "$SKILLS_DIR/read-pdf-mineru/scripts/mineru_extract.py" \
   --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
@@ -28,7 +28,7 @@ python "$SKILLS_DIR/read_pdf_mineru/scripts/mineru_extract.py" \
 If `.agent/skills` is unavailable, set `SKILLS_DIR` to your central skills checkout (e.g., `$CODEX_HOME/skills`) and reuse the same command.
 
 ## Default execution mode: dispatch via sbatch
-Use Slurm by default. Follow the `agent_guide` skill's `agent_environment.md` for partition/cpu/mem/account values. Create a small dispatch script in `agent_assets/<project_name>/code/` and submit it.
+Use Slurm by default. Follow the `agent-guide` skill's `agent-environment.md` for partition/cpu/mem/account values. Create a small dispatch script in `agent_assets/<project_name>/code/` and submit it.
 
 Example `agent_assets/<project_name>/code/mineru_dispatch.sbatch`:
 ```bash
@@ -48,7 +48,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate mineru
 
 SKILLS_DIR="$(readlink -f .agent/skills)"
-python "$SKILLS_DIR/read_pdf_mineru/scripts/mineru_extract.py" \
+python "$SKILLS_DIR/read-pdf-mineru/scripts/mineru_extract.py" \
   --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt
@@ -63,13 +63,13 @@ sbatch agent_assets/<project_name>/code/mineru_dispatch.sbatch
 If the PDF is small and you already have an interactive compute node, run the “Quick use” command directly. This avoids waiting for Slurm scheduling.
 
 ## If the user explicitly asks to use a compute node (interactive)
-SSH to the `<compute_node_name>` defined in the `agent_guide` skill's `agent_environment.md`, activate `mineru`, then run the script:
+SSH to the `<compute_node_name>` defined in the `agent-guide` skill's `agent-environment.md`, activate `mineru`, then run the script:
 ```bash
 ssh <compute_node_name>
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate mineru
 SKILLS_DIR="$(readlink -f .agent/skills)"
-python "$SKILLS_DIR/read_pdf_mineru/scripts/mineru_extract.py" \
+python "$SKILLS_DIR/read-pdf-mineru/scripts/mineru_extract.py" \
   --filepath_pdf agent_assets/<project_name>/artifacts/pdf_conversions/<paper>.pdf \
   --output_dir agent_assets/<project_name>/pdf_conversions \
   --method txt

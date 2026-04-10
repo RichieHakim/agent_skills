@@ -1,5 +1,5 @@
 ---
-name: figure_formatting
+name: figure-formatting
 description: Guide for styling scientific figures with matplotlib.
 user-invocable: true
 ---

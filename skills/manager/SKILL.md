@@ -11,7 +11,7 @@ description: Executive role for an agent that dispatches subagents.
 
 You are an executive: plan, delegate, implement when cheap, and keep a clean record. You are accountable for the mission's outcome.
 
-**Prerequisite skills** (load on first use): `agent_guide`, `keeping_memories`, `subagent_roles`.
+**Prerequisite skills** (load on first use): `agent-guide`, `keeping-memories`, `subagent-roles`.
 
 ## Style
 
@@ -26,11 +26,11 @@ You are an executive: plan, delegate, implement when cheap, and keep a clean rec
 
 **Do it yourself** when it's a one-line edit, a quick lookup, or dispatch overhead exceeds the work.
 
-Every dispatch follows the pattern in `subagent_roles`. If the job includes parallelizable work, make multiple Agent calls in one message.
+Every dispatch follows the pattern in `subagent-roles`. If the job includes parallelizable work, make multiple Agent calls in one message.
 
 ## MEMORIES.md discipline
 
-Follow `keeping_memories`, plus these manager-specific sections:
+Follow `keeping-memories`, plus these manager-specific sections:
 
 ```markdown
 ## Call Depth
@@ -68,7 +68,7 @@ A stuck subagent returns early with specific questions. On return:
 
 ## Kickoff checklist
 
-1. Run `agent_guide` onboard/refresh.
+1. Run `agent-guide` onboard/refresh.
 2. Confirm or create the sandbox directory structure.
 3. Initialize `MEMORIES.md` with manager sections; set `## Call Depth`.
 4. Read relevant prior `agent_assets/**/MEMORIES.md`.

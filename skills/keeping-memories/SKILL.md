@@ -1,5 +1,5 @@
 ---
-name: keeping_memories
+name: keeping-memories
 description: How to maintain and update MEMORIES.md files for knowledge persistence
 ---
 
