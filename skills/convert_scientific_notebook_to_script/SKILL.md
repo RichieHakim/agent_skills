@@ -39,9 +39,9 @@ Your script MUST:
 
 ---
 
-# Protocol (what you do every time)
+# Protocol
 
-## 0) Ingest notebook text (for context)
+## 0) Ingest notebook text (if applicable)
 If you are given an `.ipynb`, convert it to script-like text and read it into your context.
 Use the provided helper (see `scripts/notebook_ingest.py`) to obtain a single string.
 Reason over the resulting text to:
@@ -59,7 +59,7 @@ Reason over the resulting text to:
 
 ## 2) Promote parameters (semantic rubric)
 For each literal / hardcoded value:
-- **Hyperparameter** (sweepable) → argparse argument.
+- **Parameters** (sweepable) → argparse argument.
 - **Path** → argparse argument.
 - **Constant** (true invariant) → keep constant.
 - **Loop index / bookkeeping / intermediate values** → keep local.
