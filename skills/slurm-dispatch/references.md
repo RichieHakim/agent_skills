@@ -95,7 +95,7 @@ Full node is `-c 112 --mem=990G`; size to the job.
 
 ## Scheduler limits
 
-- **Observed max active jobs per account: 16.** Use `--array=0-N%15` to keep a slot free. (FASRC's public cap is 10,000 pending+running per user; the 16 is a tighter per-account/QoS limit observed on Kempner.)
+- **Observed max active jobs per account: 16.** For kempner_ jobs only, use `--array=0-N%15` to keep a slot free. (FASRC's total public cap is 10,000 pending+running per user; the 16 is a tighter per-account/QoS limit observed on Kempner partitions, only.)
 - Array job max index: 10,000.
 - Login nodes are cgroup-limited to 1 core / 4 GB.
 - `scancel -n <job-name>` cancels a whole named sweep — set `--job-name=<prefix>` consistently in the submitter.
