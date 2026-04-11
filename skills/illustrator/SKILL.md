@@ -56,15 +56,22 @@ Works for `.ai`, `.svg`, `.pdf`, `.eps`.
 export_pdf(output_path="/path/to/figure.pdf", options={trim_marks: false, registration_marks: false, color_bars: false, page_information: false, bleed: false})
 ```
 
-Verify the output is XeLaTeX-safe with pikepdf:
-```python
+After export, trim whitespace and verify XeLaTeX safety:
+
+```bash
+# 1. Trim to content bounds (2bp margin)
+pdfcrop --margins 2 figure.pdf figure.pdf
+
+# 2. Verify XeLaTeX-safe (no ICC stream reference)
+python3 -c "
 import pikepdf
-pdf = pikepdf.open("figure.pdf")
+pdf = pikepdf.open('figure.pdf')
 for page in pdf.pages:
-    if "/Group" in page and "/CS" in page["/Group"]:
-        cs = page["/Group"]["/CS"]
-        assert not isinstance(cs, pikepdf.Array), f"ICC ref found — run latex-pdf-preprocess skill"
-print("OK")
+    if '/Group' in page and '/CS' in page['/Group']:
+        cs = page['/Group']['/CS']
+        assert not isinstance(cs, pikepdf.Array), f'ICC ref found — run latex-pdf-preprocess skill'
+print('OK')
+"
 ```
 
 **Fallback: JSX script via osascript.** Use this if you need finer control over PDF settings. Note that `saveAs` changes the active document path as a side effect.
