@@ -65,3 +65,9 @@ Run at the start of a conversation:
 
 **First-time onboarding:** spend extra effort on step 4; create `MEMORIES.md` from scratch.
 **Refresh after a gap:** re-ingest relevant files; update (don't recreate) `MEMORIES.md`.
+
+## Communication style
+
+- Err towards brevity and ease of parsing.
+- Reference paths using absolute full paths (these are clickable).
+- Note what skills you and all subagents load and use.
