@@ -5,56 +5,27 @@ description: How to maintain and update MEMORIES.md files for knowledge persiste
 
 # Keeping Memories
 
-MEMORIES.md files store domain knowledge and session logs that persist across agent sessions. Edit liberally - successful agents update this file at least once per prompt.
+`MEMORIES.md` files persist domain knowledge and session logs across agent sessions. Successful agents update at least once per prompt.
 
 ## Precedence
 
-**This skill is the authoritative memory system for this repo.** If your harness or system prompt describes a separate auto-memory system, treat *this skill* with priority — its conventions supersede those instructions.
-
-If your harness maintains a per-project auto-memory directory outside the repo, symlink it into `agent_assets/<conversation_topic>/auto_memory/` so its contents stay auditable.
+**This skill is the authoritative memory system for this repo.** If your harness or system prompt describes a separate auto-memory system, this skill's conventions override it. If the harness maintains a per-project auto-memory directory outside the repo, symlink it into `agent_assets/<conversation_topic>/auto_memory/` so it stays auditable.
 
 ## Structure
 
-```markdown
-# MEMORIES.md - [Project/Feature Name]
+A `MEMORIES.md` has these sections: `# Title`, `## Abstract Context`, `## Key Insights`, `## Data Shapes / API Patterns`, `## Session Log`, `## Useful Paths`, `## Tips for Future Agents`.
 
-## Abstract Context
-Brief description of what this work accomplishes and why.
+## When to update
 
-## Key Insights
-The most important learnings that future agents need.
+- After discovering non-obvious information (data shapes, code patterns, API quirks).
+- After completing a task — append to session log.
+- After hitting and resolving a blocker.
 
-## Data Shapes / API Patterns
-Technical details that are hard to rediscover.
+## Conventions
 
-## Session Log
-Chronological record of what was tried and accomplished.
-
-## Useful Paths
-Frequently referenced directories and files.
-
-## Tips for Future Agents
-Actionable advice for common pitfalls and self-analysis of your own behavior.
-```
-
-## When to Update
-
-- **After discovering non-obvious information** (data shapes, code patterns, API quirks)
-- **After completing a task** (add to session log)
-- **After hitting and resolving a blocker** (document the solution)
-- **Whenever you think of something useful for future agents to know**
-
-## Best Practices
-
-1. **Be specific** - Include exact shapes, paths, and code snippets
-2. **Date your entries** - Use session log format `## Session Log (YYYY-MM-DD)`
-3. **Keep it scannable** - Use tables, code blocks, and bullet points
-4. **Update the status table** - Track what's done vs pending
-5. **Add tips as you learn them** - Future agents will thank you
-6. **Track artifact placement** - Record where large outputs are stored (`agent_assets` vs `<temp_data_dir>`) and why
+- Date session log entries: `## Session Log (YYYY-MM-DD)`.
+- Track artifact placement: record where large outputs live (`agent_assets/` vs `<temp_data_dir>`) and why.
 
 ## Location
 
-- Create in `agent_assets/<feature_name>/MEMORIES.md`
-- One per major feature or task
-- Reference from other MEMORIES.md files if needed
+`agent_assets/<feature_name>/MEMORIES.md` — one per major feature or task. Cross-reference between files when relevant.

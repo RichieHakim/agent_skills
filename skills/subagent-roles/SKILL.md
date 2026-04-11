@@ -1,60 +1,47 @@
 ---
 name: subagent-roles
-description: Subagent roles and the dispatch pattern.
+description: Agent roles, models, and the dispatch pattern for delegating to subagents.
 ---
 
 # Subagent Roles
 
-A **switchboard**: pick a role, dispatch a subagent with it. Roles are *suggestive* — they bundle default skills, but subagents may load others if needed.
+A role bundles a default skill set, model, and workspace convention. The manager picks a role, fills in the dispatch pattern, and calls the Agent tool. Subagents may load extra skills if the task needs them.
 
 ## Dispatch pattern
 
 Every dispatch prompt MUST include:
 
-1. **Role.** `Act as <role_name>.`
-2. **Skills.** `Load agent-guide, then this role's skills: <list>.`
-3. **Briefing.** Inline context, or pointers to specific `## Section` anchors in the manager's `MEMORIES.md` (flag it as living/actively updated).
-4. **Task.** Scoped small. Exact paths, commands, deliverables.
-5. **Response shape.** Verbosity cap and format. Default: *<200 words; what you did / findings / artifacts / uncertainties*.
+1. **Role and skills.** `Act as <role>. Load workspace-conventions, then: <skills>.`
+2. **Briefing.** Inline context for small self-contained tasks; otherwise point at specific `## Section` anchors in `MEMORIES.md` and flag the file as actively maintained, not frozen.
+3. **Task.** Narrowly scoped. Exact paths, commands, deliverables. Name the workspace directory if it differs from the parent's default.
+4. **Response shape.** Verbosity cap and format. Default: *what you did / findings / artifacts / uncertainties*.
+5. **Model.** Set the Agent tool's `model` parameter explicitly — never inherit. See "Model selection" below.
 6. **Escalation rule** (verbatim): *"If you hit real uncertainty, make progress on the uncertainty-free parts, organize what you have, then stop and return with specific questions rather than guessing."*
-7. **Workspace.** Shared (`agent_assets/<topic>/`) or dedicated (`.../subagents/<name>/`).
 
-**Parallel dispatch.** Independent subtasks require multiple Agent calls in a single message.
+**Parallel dispatch.** Independent subtasks go in a single message with multiple Agent calls.
+
+## Workspaces
+
+Subagents inherit the parent's workspace (`agent_assets/<topic>/`) unless the role or task says otherwise. Only carve out a dedicated `agent_assets/<topic>/subagents/<sub_topic>/` when the work is self-contained enough that a fresh reader should audit it in isolation. `sub-manager` always gets its own.
+
+## Model selection
+
+Select an appropriate model given the task requirements. Tasks that are challenging or require a high degree of trust should use more capable models. Model names are in `references.md`. Pass the model name explicitly when dispatching.
 
 ## Roles
 
-`agent-guide` is always loaded alongside the skills below.
+Every role loads `workspace-conventions` first, in addition to the suggested list of skills (add/remove/edit this list as appropriate for the task). Subagents do **not** load `manager` — that's scoped to the top-level agent running the conversation.
 
-### `data-analyst`
-- **Skills:** `xlsx`, `figure-formatting`, `coding-style`
-- **When:** analyze spreadsheets, compute stats, produce plots.
+| Role | Skills available | When |
+|---|---|---|
+| `computational-scientist` | `coding-style`, `xlsx`, `figure_formatting` | AI/ML, data, stats, plots. |
+| `script-refactorer` | `notebook-to-script`, `script-opinions`, `coding-style` | Turn notebooks or one-off scripts into HPC/batch-safe scripts. |
+| `slurm-dispatcher` | `slurm-dispatch`, `script-opinions`, `coding-style` | Package scripts for SLURM, launch arrays or sweeps. |
+| `code-reviewer` | `coding-style`, `script-opinions`, `simplify` | Review diffs for style, complexity, correctness. |
+| `literature-reviewer` | `read-pdf-mineru` | Extract and summarize scientific PDFs. |
+| `manuscript-writer` | `latex-manuscript`, `latex-pdf-preprocess`, `illustrator` | Draft or format manuscript sections, prepare figures, build PDFs. |
+| `sub-manager` | `manager`, `subagent-roles`, `keeping-memories` | Open-ended decomposition that would flood the parent's context. Dedicated workspace required. Only allowed if parent depth < `<max_subagent_depth>` (see `manager`). Match parent's model. |
 
-### `script-refactorer`
-- **Skills:** `notebook-to-script`, `script-opinions`, `coding-style`
-- **When:** turn notebooks into HPC/batch-safe scripts.
+## Adding or removing roles
 
-### `slurm-dispatcher`
-- **Skills:** `slurm-dispatch`, `script-opinions`, `coding-style`
-- **When:** package scripts for SLURM, launch array jobs (use `%15`).
-
-### `literature-reviewer`
-- **Skills:** `read-pdf-mineru`
-- **When:** extract and summarize scientific PDFs.
-
-### `manuscript-writer`
-- **Skills:** `latex-manuscript`, `latex-pdf-preprocess`, `illustrator`, `figure-formatting`
-- **When:** draft/format manuscript sections, prepare figures, build PDFs.
-
-### `code-reviewer`
-- **Skills:** `coding-style`, `simplify`
-- **When:** review diffs for style, complexity, correctness.
-
-### `sub-manager`
-- **Skills:** `manager`, `subagent-roles`, `keeping-memories`
-- **When:** open-ended decomposition that would flood the parent's context.
-- **Workspace:** `agent_assets/<topic>/subagents/<sub_topic>/` with its own `MEMORIES.md`, `code/`, `artifacts/`.
-- **Hierarchy:** allowed only if parent depth < `<max_subagent_depth>` (see `manager`).
-
-## Adding new roles
-
-New `### <role-name>` section with **Skills** and **When**. Add when a pattern repeats; remove when unused.
+Promote an ad-hoc dispatch into a role only after the same skill+model combo has repeated three or more times. Delete roles that go unused — a stale table is worse than a short one. Don't list a skill that doesn't exist in this repo or in the CLI-bundled set.
