@@ -28,7 +28,7 @@ python "$SKILLS_DIR/read-pdf-mineru/scripts/mineru_extract.py" \
 If `.agent/skills` is unavailable, set `SKILLS_DIR` to your central skills checkout (e.g., `$CODEX_HOME/skills`) and reuse the same command.
 
 ## Default execution mode: dispatch via sbatch
-Use Slurm by default. Follow the `agent-guide` skill's `agent-environment.md` for partition/cpu/mem/account values. Create a small dispatch script in `agent_assets/<project_name>/code/` and submit it.
+Use Slurm by default. Follow the `agent-guide` skill's `references.md` for partition/cpu/mem/account values. Create a small dispatch script in `agent_assets/<project_name>/code/` and submit it.
 
 Example `agent_assets/<project_name>/code/mineru_dispatch.sbatch`:
 ```bash
@@ -63,7 +63,7 @@ sbatch agent_assets/<project_name>/code/mineru_dispatch.sbatch
 If the PDF is small and you already have an interactive compute node, run the “Quick use” command directly. This avoids waiting for Slurm scheduling.
 
 ## If the user explicitly asks to use a compute node (interactive)
-SSH to the `<compute_node_name>` defined in the `agent-guide` skill's `agent-environment.md`, activate `mineru`, then run the script:
+SSH to the `<compute_node_name>` defined in the `agent-guide` skill's `references.md`, activate `mineru`, then run the script:
 ```bash
 ssh <compute_node_name>
 source "$(conda info --base)/etc/profile.d/conda.sh"
