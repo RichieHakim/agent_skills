@@ -22,4 +22,4 @@
 If the user asks for a specific git call, do it, then privileges reset to defaults.
 
 ## Compute
-Activate `<conda_env_name>` before running code. Don't run compute on a login node — `ssh <compute_node_name>` first (it changes; recheck). For batch work load `slurm-dispatch`, which manages SBATCH templates, partition rules, and account selection.
+Activate `<conda_env_name>` before running code. Don't run compute on a login node — `ssh <compute_node_name>` first (it changes; recheck). For batch work load `job-dispatch`, which manages the worker/submitter pattern and (for SLURM) SBATCH templates, partition rules, and account selection.

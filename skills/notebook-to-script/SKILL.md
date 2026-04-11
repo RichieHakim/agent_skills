@@ -12,7 +12,7 @@ Treat the notebook as a **prototype spec**. Your job is to extract the scientifi
 ## Output contract
 
 - Return **one** runnable Python script in a single code block.
-- Do **not** output an sbatch/shell script unless explicitly requested (see the `slurm-dispatch` skill, if needed).
+- Do **not** output a worker/sbatch shell script unless explicitly requested (see the `job-dispatch` skill, if needed).
 - Preserve scientific logic as-is. Refactor aggressively *around* it, not through it.
 
 ## Protocol

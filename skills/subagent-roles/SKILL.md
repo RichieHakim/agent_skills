@@ -37,8 +37,8 @@ Every role loads `workspace-conventions` first, in addition to the suggested lis
 | `computational-scientist` | `coding-style`, `script-opinions`, `figure-formatting` | AI/ML, data, stats, plots. |
 | `figure-maker` | `figure-formatting`, `latex-pdf-preprocess`, `illustrator` | Making and editing figures, controlling adobe illustrator, exporting figure pdfs. |
 | `script-refactorer` | `notebook-to-script`, `script-opinions`, `coding-style` | Turn notebooks or one-off scripts into HPC/batch-safe scripts. |
-| `slurm-dispatcher` | `slurm-dispatch`, `script-opinions`, `coding-style` | Package scripts for SLURM, launch arrays or sweeps. |
-| `code-reviewer` | `coding-style`, `script-opinions`, `slurm-dispatch`, `simplify` | Review diffs for style, complexity, correctness. |
+| `job-dispatcher` | `job-dispatch`, `script-opinions`, `coding-style` | Package scripts for batch (local or SLURM), launch arrays or sweeps. |
+| `code-reviewer` | `coding-style`, `script-opinions`, `job-dispatch`, `simplify` | Review diffs for style, complexity, correctness. |
 | `literature-reviewer` | `read-pdf-mineru` | Extract and summarize scientific PDFs. |
 | `manuscript-writer` | `latex-manuscript`, `latex-pdf-preprocess`, `illustrator` | Draft or format manuscript sections, prepare figures, build PDFs. |
 | `sub-manager` | `manager`, `subagent-roles`, `keeping-memories` | Open-ended decomposition that would flood the parent's context. Dedicated workspace required. Only allowed if parent depth < `<max_subagent_depth>` (see `manager`). Match parent's model. |
