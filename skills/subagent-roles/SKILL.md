@@ -34,7 +34,8 @@ Every role loads `workspace-conventions` first, in addition to the suggested lis
 
 | Role | Skills available | When |
 |---|---|---|
-| `computational-scientist` | `coding-style`, `xlsx`, `figure_formatting` | AI/ML, data, stats, plots. |
+| `computational-scientist` | `coding-style`, `script-opinions`, `figure-formatting` | AI/ML, data, stats, plots. |
+| `figure-maker` | `figure-formatting`, `latex-pdf-preprocess`, `illustrator` | Making and editing figures, controlling adobe illustrator, exporting figure pdfs. |
 | `script-refactorer` | `notebook-to-script`, `script-opinions`, `coding-style` | Turn notebooks or one-off scripts into HPC/batch-safe scripts. |
 | `slurm-dispatcher` | `slurm-dispatch`, `script-opinions`, `coding-style` | Package scripts for SLURM, launch arrays or sweeps. |
 | `code-reviewer` | `coding-style`, `script-opinions`, `simplify` | Review diffs for style, complexity, correctness. |
