@@ -22,6 +22,8 @@ The submitter must import **only stdlib** so it runs under the base Python envir
 
 ## Worker script (`run_<name>.sh`)
 
+Fill in the `#SBATCH` header with concrete account, partition, and resource values for the target cluster — see `references.md` for ready-to-paste blocks.
+
 ```bash
 #!/bin/bash
 #SBATCH --job-name=<short_name>
@@ -122,19 +124,24 @@ if __name__ == "__main__":
 - **Always support `--dry-run`** on the submitter.
 - **No post-hoc log copying** — dual-handler logging from `script-opinions` already writes into `dir_save/logs/`.
 
-## Array jobs (rc.fas.harvard.edu)
+## Array jobs
 
-Scheduler caps active jobs at 16. For sweeps, prefer array jobs with `%15` (one slot free):
+For sweeps, prefer SLURM array jobs over a loop of `sbatch` calls. Throttle the number of simultaneously running tasks to stay under whatever any active-job caps.
 
 ```bash
 #SBATCH --array=0-99%15
 ```
 
-Index `DATASETS[SLURM_ARRAY_TASK_ID]` in the worker or submitter.
+Index `DATASETS[SLURM_ARRAY_TASK_ID]` in the worker or submitter. See `references.md` for any cluster-specific caps and recommended `%N` values.
+
+## References
+
+- `references.md` — Cluster-specific cheat sheet: partitions, billing accounts, fairshare guidance, ready-to-paste `#SBATCH` blocks per partition, and any scheduler caps. Consult this before filling in the worker's `#SBATCH` header.
 
 ## Pre-submit checklist
 
 - Analysis script conforms to `script-opinions`.
+- `#SBATCH` header uses an account + partition combination valid on the target cluster (see `references.md`).
 - Worker reads the analysis-script path from `$1`; submitter computes and passes the absolute path.
 - `runs/logs/` exists.
 - Tested with `--dry-run` first.
