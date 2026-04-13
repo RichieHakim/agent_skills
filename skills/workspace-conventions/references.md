@@ -2,12 +2,14 @@
 
 ## repository variables
 - `<remote>`: True
-- `<conda_env_name>`: 'wm'
-- `<compute_node_name>`: 'holygpu8a15603.rc.fas.harvard.edu'
-- `<compute_node_resources>`: 'gpu:h100, cpu:24, mem:360G'
 - `<temp_data_dir>`: /n/netscratch/bsabatini_lab/Lab/rhakim/temp
-- `<account_name>`: 'kempner_rhakim_lab'
 - `<agent_assets_meta_directory>`: '/n/holylabs/kempner_rhakim_lab/Lab/rhakim/agent_assets/<repo>/'
+
+Ask user or check /job-dispatch skill for the following:
+- `<conda_env_name>`
+- `<compute_node_name>`
+- `<compute_node_resources>`
+- `<account_name>`
 
 ## agent access
 - Internet: True
