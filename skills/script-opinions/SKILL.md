@@ -5,7 +5,7 @@ description: Opinions for standalone Python scripts. Analysis runs, HPC jobs, ba
 
 # Script Opinions
 
-Scripts must be **stateless, headless, reproducible, observable**. This extends `coding-style` for standalone Python scripts.
+Scripts must be **stateless, headless, reproducible, observable**. This extends the `coding-style` skill for standalone Python scripts.
 
 Scripts should be:
 - General: reusable across datasets and parameters. No hardcoded paths, magic numbers, or assumptions.
@@ -55,6 +55,6 @@ The skeleton is a floor, not a ceiling — instrument, annotate, and structure t
 ## Long-running jobs
 
 - **Preemption safety:** `--checkpoint-every-{seconds,steps}` + `--resume`. Atomic writes. Validate checkpoint before new work.
-- **Large I/O:** stream from HDF5, memmap, or zarr. Don't load massive arrays fully.
+- **Large I/O:** try to implement lazy loading, streaming, or chunking.
 - **Multiprocess:** each worker opens its own file handle. Never share HDF5/zarr handles across processes.
 - **Analysis plots:** save underlying arrays alongside figures for local regeneration.
