@@ -8,15 +8,12 @@ description: Agent roles, models, and the dispatch pattern for delegating to sub
 ## Dispatch pattern
 
 Every dispatch prompt MUST include:
-
-1. **Role and skills.** `Act as <role>. Load workspace-conventions, then: <skills>.`
-2. **Briefing.** Inline context for small tasks; point at `## Section` anchors in `MEMORIES.md` for larger ones.
-3. **Task.** Narrowly scoped. Exact paths, commands, deliverables.
-4. **Response shape.** Verbosity cap and format. Default: *what you did / findings / artifacts / uncertainties*.
-5. **Model.** Set explicitly (see `references.md`). Never inherit.
-6. **Escalation rule** (verbatim): *"If you hit real uncertainty, make progress on the uncertainty-free parts, then stop and return with specific questions."*
-
-Parallel dispatch: independent subtasks go in one message with multiple Agent calls.
+1. Role + skills: `Act as <role>. Load workspace-conventions, then: <skills>.`
+2. Briefing: context or `MEMORIES.md` anchors.
+3. Task: narrow scope, exact paths, deliverables.
+4. Response shape + verbosity cap.
+5. Model: explicit (see `references.md`), don't just inherit.
+6. Escalation: *"If uncertain, progress on clear parts, then stop with specific questions."*
 
 ## Roles
 

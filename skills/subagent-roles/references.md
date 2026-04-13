@@ -1,11 +1,7 @@
-# Claude models for the Agent tool
+# Models
 
-The Agent tool's `model` parameter accepts the following:
-
-| Short | Tier |
+| Model | Use |
 |---|---|
-| `haiku` | Cheapest. Mechanical work. |
-| `sonnet` | Default. Most role-based work. |
-| `opus` | Flagship. Hard reasoning only. |
-
-Cost scales roughly haiku < sonnet << opus.
+| `haiku` | Mechanical work |
+| `sonnet` | Default — most tasks |
+| `opus` | Hard reasoning |
