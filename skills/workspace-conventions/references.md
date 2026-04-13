@@ -5,11 +5,7 @@
 - `<temp_data_dir>`: /n/netscratch/bsabatini_lab/Lab/rhakim/temp
 - `<agent_assets_meta_directory>`: '/n/holylabs/kempner_rhakim_lab/Lab/rhakim/agent_assets/<repo>/'
 
-Ask user or check /job-dispatch skill for the following:
-- `<conda_env_name>`
-- `<compute_node_name>`
-- `<compute_node_resources>`
-- `<account_name>`
+Cluster/partition details: load `job-dispatch`.
 
 ## agent access
 - Internet: True
