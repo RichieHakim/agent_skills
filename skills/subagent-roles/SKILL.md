@@ -9,8 +9,8 @@ description: Agent roles, models, and the dispatch pattern for delegating to sub
 
 Every dispatch prompt MUST include:
 1. Role + skills: `Act as <role>. Load workspace-conventions, then: <skills>.`
-2. Briefing: context or `MEMORIES.md` anchors.
-3. Task: narrow scope, exact paths, deliverables.
+2. Briefing: context or `MEMORIES.md` anchors. Give required specifics, but grant the subagent some freedom to use its judgement. Only micromanage less intelligent models.
+3. Task: narrow scope, exact paths, deliverables, explicit non-goals ("do NOT touch X, Y").
 4. Response shape + verbosity cap.
 5. Model: explicit (see `references.md`), don't just inherit.
 6. Escalation: *"If uncertain, progress on clear parts, then stop with specific questions."*
