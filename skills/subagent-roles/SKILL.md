@@ -28,6 +28,5 @@ Every role loads `workspace-conventions` first. Subagents do **not** load `manag
 | `code-reviewer` | `coding-style`, `script-opinions`, `job-dispatch`, `simplify` | Review diffs for style/correctness |
 | `literature-reviewer` | `read-pdf-mineru` | Extract and summarize scientific PDFs |
 | `manuscript-writer` | `latex-manuscript`, `latex-pdf-preprocess`, `illustrator` | Draft/format manuscript sections, build PDFs |
-| `sub-manager` | `manager`, `subagent-roles`, `keeping-memories` | Open-ended decomposition. Dedicated workspace. Depth < `<max_subagent_depth>`. Match parent model. |
 
 Promote an ad-hoc dispatch into a role after 3+ repeats. Delete unused roles.
