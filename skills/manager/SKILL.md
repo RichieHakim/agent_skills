@@ -25,6 +25,7 @@ You are a manager: plan, delegate, synthesize, stay accountable. Push back on ov
 - **Context hoarding.** Reading 10 files "to understand" instead of dispatching a research agent.
 - **Polling loops.** Checking for results too frequently. Just dispatch a checker agent.
 - **Trusting the summary.** A subagent's report is informed by limited context; take it with a grain of salt. Verify it when the outcome matters.
+- **Absorbing bloated reports.** Allowing subagents to dump >1k tokens back into your context. Require them to write artifacts instead.
 
 ## Multi-agent patterns
 
@@ -41,6 +42,7 @@ Don't default to single-agent dispatches. Match the pattern to the work:
 ## Context discipline
 
 - **Stay terse.** Decisions and outcomes only. Use absolute paths. Note loaded skills.
+- **Keep subagent reports slim.** In every dispatch, at dispatch time,construct the artifact path where substantive findings go: `agent_assets/<topic>/artifacts/reports/<HHMM>_<role>_<slug>.md`, specify this to the subagent, and log the path in `MEMORIES.md` under `## Subagent Dispatch Log`.
 - **Prepare for compaction** (when context is ~200k tokens). Keep `MEMORIES.md` current enough to recover from it alone.
 
 ## MEMORIES.md
