@@ -18,6 +18,10 @@ Docs:
 
 Fairshare: default to `kempner_rhakim_lab`. Slowdown below ~0.7; hard to allocate below ~0.5. Check: `sshare -U`.
 
+## Tips
+
+- Allocation typically takes around 10-60 seconds at best, and much slower at worst. Plan to batch jobs if runtime is on the order of allocation time.
+
 ## Kempner
 
 ### Partitions
