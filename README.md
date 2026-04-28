@@ -1,13 +1,18 @@
 # agent_skills
 
-A collection of [Claude Code skills](https://docs.claude.com/en/docs/claude-code/skills) for scientific and software engineering work.
+A collection of agent skills for scientific and software engineering work.
 
 ## Install
 
-Symlink each skill into `~/.claude/skills/`:
+Symlink each skill into both Claude Code and Codex:
 
 ```bash
 ./sync_skills.sh
 ```
 
-Run again after adding, renaming, or removing skills.
+The script links every directory in `skills/` into:
+
+- `~/.claude/skills/`
+- `~/.codex/skills/`
+
+The repo remains the source of truth. Editing a skill here updates both agents automatically because the installed skills are symlinks. Run the script again after adding, renaming, or removing skills.
