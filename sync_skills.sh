@@ -8,10 +8,18 @@ set -euo pipefail
 # Resolve the repo skills directory (portable, no readlink -f needed)
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_SKILLS="$SCRIPT_DIR/skills"
-TARGET_SKILL_DIRS=(
+DEFAULT_TARGET_SKILL_DIRS=(
     "$HOME/.claude/skills"
     "$HOME/.codex/skills"
 )
+
+if [ "$#" -gt 0 ]; then
+    TARGET_SKILL_DIRS=("$@")
+elif [ -n "${AGENT_SKILL_DIRS:-}" ]; then
+    IFS=: read -r -a TARGET_SKILL_DIRS <<< "$AGENT_SKILL_DIRS"
+else
+    TARGET_SKILL_DIRS=("${DEFAULT_TARGET_SKILL_DIRS[@]}")
+fi
 
 # Resolve a symlink target to an absolute path (works on macOS and Linux)
 resolve_link() {
