@@ -25,7 +25,7 @@ python "$SKILLS_DIR/read-pdf-mineru/scripts/mineru_extract.py" \
   --method txt
 ```
 
-If `.agent/skills` is unavailable, set `SKILLS_DIR` to your central skills checkout (e.g., `$CODEX_HOME/skills`) and reuse the same command.
+If `.agent/skills` is unavailable, set `SKILLS_DIR` to your central skills checkout and reuse the same command.
 
 ## Default execution mode: dispatch via sbatch
 Use Slurm by default. Follow the `workspace-conventions` skill's `references.md` for partition/cpu/mem/account values. Create a small dispatch script in `agent_assets/<project_name>/code/` and submit it.
