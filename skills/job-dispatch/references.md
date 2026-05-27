@@ -88,8 +88,8 @@ Account: `rhakim_lab`. No hard per-user CPU/memory/job caps on production partit
 | `sapphire` | 112 | ~1 TB | — | 3d | Preferred CPU. ≤64c for fast scheduling. |
 | `shared` | 48 | ~184 GB | — | 3d | General CPU |
 | `serial_requeue` | mixed | varies | mixed | 3d | Preemptible, 50% fairshare cost |
-| `gpu` | 64 | ~1 TB | 4× A100 | 3d | |
-| `gpu_h200` | 112 | ~1 TB | 4× H200 | 3d | |
+| `gpu` | 64 | ~990 GB | 4× A100-80GB | 3d | sinfo: 1031177 MB/node. No enforced per-GPU split. |
+| `gpu_h200` | 112 | ~1 TB | 4× H200 | 3d | sinfo: 1031252 MB/node. |
 | `gpu_requeue` | mixed | varies | mixed | 3d | Preemptible GPU, 50% cost |
 | `bigmem` | 112 | ~2 TB | — | 3d | Only when >1 TB RAM needed |
 | `intermediate` | 112 | ~1 TB | — | 14d | Must request >3d walltime |
@@ -105,6 +105,17 @@ Account: `rhakim_lab`. No hard per-user CPU/memory/job caps on production partit
 #SBATCH -c 8
 #SBATCH --mem=32G
 #SBATCH --time=0-12:00:00
+```
+
+**`gpu` — 1× A100-80GB.** Unlike Kempner, FAS docs do NOT enforce a per-GPU memory split — request what the app actually needs, not 1/Ngpu of the node. Check actual peak with `seff <jobid>`
+after a run.
+```bash
+#SBATCH --partition=gpu
+#SBATCH --account=rhakim_lab
+#SBATCH --gres=gpu:1
+#SBATCH -c 16
+#SBATCH --mem=120G
+#SBATCH --time=0-04:00:00
 ```
 
 ## Fairshare & billing

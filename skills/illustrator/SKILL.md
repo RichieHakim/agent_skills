@@ -1,10 +1,10 @@
 ---
 name: illustrator
-description: Guide for controlling Adobe Illustrator from Claude Code via MCP tools and osascript.
+description: Guide for controlling Adobe Illustrator via MCP tools and osascript.
 user-invocable: true
 ---
 
-# Adobe Illustrator via Claude Code
+# Adobe Illustrator via MCP
 
 Note that this is an early draft of a skill. You should not rely on it alone; expect to dig deep into the MCP tool docs and code to learn how to solve problems. Feel free to suggest improvements to the skill (additions, subtractions, organization) as you use it.
 

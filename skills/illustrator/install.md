@@ -8,11 +8,13 @@
 
 ## Install
 
+Use the MCP registration command for your agent client. <agent-cli> can be `claude`, `codex`, etc.:
+
 ```bash
-claude mcp add illustrator-mcp -- npx illustrator-mcp-server
+<agent-cli> mcp add illustrator-mcp -- npx illustrator-mcp-server
 ```
 
-This registers the MCP server with Claude Code. `npx` downloads and runs the package on demand — no global install needed.
+This registers the MCP server with the active agent client. `npx` downloads and runs the package on demand — no global install needed.
 
 ## First run
 
@@ -23,7 +25,7 @@ Illustrator must be running and a document must be open for most tools to work. 
 ## Verify
 
 ```bash
-claude mcp list
+<agent-cli> mcp list
 ```
 
 Should show `illustrator-mcp` as connected.
@@ -31,10 +33,10 @@ Should show `illustrator-mcp` as connected.
 ## Remove
 
 ```bash
-claude mcp remove illustrator-mcp
+<agent-cli> mcp remove illustrator-mcp
 ```
 
 ## Alternative MCP servers
 
-- **kevinschaul/illustrator-mcp-server** — 2 tools (screenshot + run arbitrary ExtendScript). Claude can see the canvas and self-correct. Good for iterative visual editing.
+- **kevinschaul/illustrator-mcp-server** — 2 tools (screenshot + run arbitrary ExtendScript). The agent can inspect the canvas and self-correct. Good for iterative visual editing.
 - **jinkeda/Illustrator_MCP** — 12 tools + 25 injectable libraries. Checkpoints, boolean ops, procedural generation, batch task protocol. Requires CEP panel install.
