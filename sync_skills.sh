@@ -36,22 +36,35 @@ resolve_link() {
 for global_skills in "${TARGET_SKILL_DIRS[@]}"; do
     mkdir -p "$global_skills"
 
-    # Remove stale symlinks that point into this repo
+    echo "syncing: $global_skills"
+
+    # Remove stale symlinks: point into this repo but their target is gone
+    # (e.g. a skill was renamed or deleted). Valid links are kept so we can
+    # report them as unchanged below.
     for link in "$global_skills"/*; do
         [ -L "$link" ] || continue
         resolved="$(resolve_link "$link")"
         case "$resolved" in
-            "${REPO_SKILLS}"/*) rm "$link"; echo "removed stale: $(basename "$link")" ;;
+            "${REPO_SKILLS}"/*) [ -d "$resolved" ] || { rm "$link"; echo "  removed: $(basename "$link") (stale)"; } ;;
         esac
     done
 
-    echo "syncing: $global_skills"
-
-    # Create fresh symlinks for every skill directory in the repo
+    # Link every skill in the repo, reporting whether each was added, changed,
+    # or already correct.
+    added=0 changed=0 unchanged=0
     for skill_dir in "$REPO_SKILLS"/*/; do
         [ -d "$skill_dir" ] || continue
         name="$(basename "$skill_dir")"
-        ln -sfn "$skill_dir" "$global_skills/$name"
-        echo "linked: $name"
+        dest="$global_skills/$name"
+        if [ -L "$dest" ] && [ "$(resolve_link "$dest")" = "${skill_dir%/}" ]; then
+            : $((unchanged++))  # already a correct symlink — nothing to do
+            continue
+        elif [ -e "$dest" ] || [ -L "$dest" ]; then
+            : $((changed++)); echo "  changed: $name"
+        else
+            : $((added++)); echo "  added:   $name"
+        fi
+        ln -sfn "$skill_dir" "$dest"
     done
+    echo "  $added added, $changed changed, $unchanged unchanged"
 done
