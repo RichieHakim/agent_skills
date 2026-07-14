@@ -26,24 +26,32 @@ Fairshare: default to `kempner_rhakim_lab`. Slowdown below ~0.7; hard to allocat
 
 ### Partitions
 
+All four main GPU partitions share a **2-day max wall** and the `kempner_base` QOS.
+
 | Partition | GPU/node | Cores/node | RAM/node | Max wall |
 |---|---|---|---|---|
-| `kempner` | 4× A100 40G | 64 | ~1 TB | 7d |
-| `kempner_h100` | 4× H100 80G | 96 | ~1.5 TB | 3d |
-| `kempner_requeue` | mixed (A100/H100/H200) | varies | varies | 7d (preemptible) |
-| `kempner_interactive` | A100 MIG 3g.20gb | 64 | 1 TB | 8h |
+| `kempner` | 4× A100 40G | 64 | ~1 TB | 2d |
+| `kempner_h100` | 4× H100 80G | 96 | ~1.5 TB | 2d |
+| `kempner_h200` | 4× H200 141G | 64 | ~1.5 TB | 2d |
+| `kempner_rtx` | 8× RTX PRO 6000 96G | 128 | ~1.5 TB | 2d |
+| `kempner_requeue` | mixed (A100/H100/H200/RTX) | varies | varies | 2d (preemptible) |
+| `kempner_interactive` | A100 MIG 3g.20gb (8 slices/node) | 64 | ~1 TB | 8h |
 
-Per-GPU caps: `kempner` ≤ 16c / 240G; `kempner_h100` ≤ 24c / 375G. No `kempner_h200` — use `kempner_requeue --constraint=h200` or FAS `gpu_h200`.
+GPU picking: **A100** for small/proto & max software compatibility; **H100/H200** for large-scale training/inference (FP8, NVLink); **H200** for the largest/long-context models (141 GB, highest bandwidth); **RTX** for FP4 / rendering / RL (8/node, PCIe not NVLink — weaker multi-GPU sharding).
+
+Per-GPU share — request this much cores/RAM for *each* GPU you request: `kempner` 16c / 240G · `kempner_h100` 24c / 360G · `kempner_h200` 16c / 360G · `kempner_rtx` 16c / 180G. These are just the node's cores and RAM split across its GPUs (cores = cores÷GPUs exactly; RAM ≈ node RAM÷GPUs, rounded down for OS overhead), so *k* GPUs → *k*× these values = *k*/(GPUs-per-node) of the node. The scheduler doesn't enforce this (only the 16-GPU/user QOS cap is hard), but overshooting your share strands the node's other GPUs — they can't be allocated to anyone else.
 
 ### Limits
 
-- 16 GPUs per `kempner_*` account (shared across all users of that account)
-- 1 GPU per user on `kempner_interactive`
-- For sweeps: `--array=0-N%15` to keep a slot free
+- **16 GPUs per user**, aggregated across `kempner` + `kempner_h100` + `kempner_h200` + `kempner_rtx` (QOS `kempner_base`, `MaxTRESPU=gres/gpu=16`).
+- **96 GPUs per account** (`GrpTRES`; `kempner_undergrads` = 4).
+- 1 GPU per user on `kempner_interactive`.
+- To exceed caps: use `kempner_requeue` (preemptible), shorten runtimes, or request a reservation via Cluster Governance. Monopolizing gets jobs killed without notice and fairshare cut.
+- For sweeps: `--array=0-N%15` to keep one slot free.
 
-### SBATCH blocks
+### `#SBATCH` header templates (one per partition)
 
-1 GPU slice = 1 GPU + 1/4 of the node cores & RAM. Scale linearly for multi-GPU.
+Copy or adapt the block below matching the GPU you want into your worker `.sh` header. Each block requests **one GPU's share** of the node (1/4 node on A100/H100/H200, 1/8 on RTX — 8 GPUs/node); for *N* GPUs, set `--gres=gpu:N` and scale `-c`/`--mem` by *N*. `G` vs `M` suffix both fine; stay at/under the per-GPU share above.
 
 **`kempner` — 1× A100**
 ```bash
@@ -51,7 +59,7 @@ Per-GPU caps: `kempner` ≤ 16c / 240G; `kempner_h100` ≤ 24c / 375G. No `kempn
 #SBATCH --account=kempner_rhakim_lab
 #SBATCH --gres=gpu:1
 #SBATCH -c 16
-#SBATCH --mem=249000M
+#SBATCH --mem=240G
 #SBATCH --time=1-00:00:00
 ```
 
@@ -61,18 +69,38 @@ Per-GPU caps: `kempner` ≤ 16c / 240G; `kempner_h100` ≤ 24c / 375G. No `kempn
 #SBATCH --account=kempner_rhakim_lab
 #SBATCH --gres=gpu:1
 #SBATCH -c 24
-#SBATCH --mem=374000M
+#SBATCH --mem=360G
 #SBATCH --time=1-00:00:00
 ```
 
-**`kempner_requeue`** — pin GPU type with `--constraint`. Size cores/mem to hardware.
+**`kempner_h200` — 1× H200** (141 GB VRAM, highest bandwidth)
+```bash
+#SBATCH --partition=kempner_h200
+#SBATCH --account=kempner_rhakim_lab
+#SBATCH --gres=gpu:1
+#SBATCH -c 16
+#SBATCH --mem=360G
+#SBATCH --time=1-00:00:00
+```
+
+**`kempner_rtx` — 1× RTX PRO 6000 Blackwell** (96 GB, 8/node, PCIe, FP4-capable). Now the **cheapest GPU** for fairshare (see below).
+```bash
+#SBATCH --partition=kempner_rtx
+#SBATCH --account=kempner_rhakim_lab
+#SBATCH --gres=gpu:1
+#SBATCH -c 16
+#SBATCH --mem=180G
+#SBATCH --time=1-00:00:00
+```
+
+**`kempner_requeue`** — preemptible; pin GPU type with `--constraint` (features: `a100`, `h100`, `h200`, `rtx6000pro`, `a100-mig`). Size cores/mem to the chosen hardware.
 ```bash
 #SBATCH --partition=kempner_requeue
 #SBATCH --account=kempner_rhakim_lab
 #SBATCH --constraint=h200
 #SBATCH --gres=gpu:1
-#SBATCH -c 24
-#SBATCH --mem=374000M
+#SBATCH -c 16
+#SBATCH --mem=360G
 #SBATCH --time=1-00:00:00
 #SBATCH --requeue
 ```
@@ -126,10 +154,14 @@ after a run.
 |---|---|
 | Cascade Lake CPU | 1.0 (baseline) |
 | Sapphire Rapids CPU | 0.6 |
-| A100 GPU | ~190 |
-| H100 / H200 GPU | ~547 |
+| A100 GPU (`kempner`) | 209 / GPU |
+| H100 GPU (`kempner_h100`) | 547 / GPU |
+| H200 GPU (`kempner_h200`) | 547 / GPU |
+| RTX6000 GPU (`kempner_rtx`) | 21 / GPU — cheapest |
 
 Requeue partitions bill at 50%.
+
+**Total billing at the per-GPU share** (1 GPU + its cores/RAM): `kempner_rtx` ≈ **68**, `kempner` (A100) ≈ 245, `kempner_h200` ≈ 566, `kempner_h100` ≈ 575. RTX is by far the cheapest — its low GPU weight (21) dominates and memory is cheap. Same 4c/64G request: RTX bills ~35 vs H100 ~551 (≈16×). Prefer `kempner_rtx` for fairshare when the RTX PRO 6000 fits the job.
 
 ## General limits
 
