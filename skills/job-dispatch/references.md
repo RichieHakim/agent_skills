@@ -37,7 +37,9 @@ All four main GPU partitions share a **2-day max wall** and the `kempner_base` Q
 | `kempner_requeue` | mixed (A100/H100/H200/RTX) | varies | varies | 2d (preemptible) |
 | `kempner_interactive` | A100 MIG 3g.20gb (8 slices/node) | 64 | ~1 TB | 8h |
 
-GPU picking: **A100** for small/proto & max software compatibility; **H100/H200** for large-scale training/inference (FP8, NVLink); **H200** for the largest/long-context models (141 GB, highest bandwidth); **RTX** for FP4 / rendering / RL (8/node, PCIe not NVLink — weaker multi-GPU sharding).
+GPU picking: **A100** for small/proto & max software compatibility; **H100/H200** for large-scale training/inference (FP8, NVLink); **H200** for the largest/long-context models (141 GB, highest bandwidth); **RTX** for FP4 / rendering / RL (8/node, PCIe not NVLink — weaker multi-GPU sharding). Precision: FP8 on H100/H200/RTX; FP4 on RTX only.
+
+Relative single-GPU throughput (Kempner's BF16-training benchmark, ~1B transformer): **A100 ≈ 1× · RTX ≈ 1.4× · H100 ≈ 2.4× · H200 ≈ 2.6×**. Memory bandwidth: H200 ~40% > H100, ~3× A100/RTX. Cross against the billing table below for perf-per-fairshare — RTX is the cheapest *and* ~1.4× an A100. Full benchmarks: "Choosing a GPU partition" (Docs).
 
 Per-GPU share — request this much cores/RAM for *each* GPU you request: `kempner` 16c / 240G · `kempner_h100` 24c / 360G · `kempner_h200` 16c / 360G · `kempner_rtx` 16c / 180G. These are just the node's cores and RAM split across its GPUs (cores = cores÷GPUs exactly; RAM ≈ node RAM÷GPUs, rounded down for OS overhead), so *k* GPUs → *k*× these values = *k*/(GPUs-per-node) of the node. The scheduler doesn't enforce this (only the 16-GPU/user QOS cap is hard), but overshooting your share strands the node's other GPUs — they can't be allocated to anyone else.
 
@@ -178,4 +180,4 @@ Requeue partitions bill at 50%.
 ## Docs
 
 - FASRC: [Running Jobs](https://docs.rc.fas.harvard.edu/kb/running-jobs/) · [Fairshare](https://docs.rc.fas.harvard.edu/kb/fairshare/) · [Kempner partitions](https://docs.rc.fas.harvard.edu/kb/kempner-partitions/) · [GPU computing](https://docs.rc.fas.harvard.edu/kb/gpgpu-computing-on-the-cluster/)
-- Kempner: [Overview](https://handbook.eng.kempnerinstitute.harvard.edu/s1_high_performance_computing/kempner_cluster/overview_of_kempner_cluster.html) · [Responsible use](https://handbook.eng.kempnerinstitute.harvard.edu/s1_high_performance_computing/kempner_cluster/kempner_policies_for_responsible_use.html) · [Advanced SLURM](https://handbook.eng.kempnerinstitute.harvard.edu/s1_high_performance_computing/general_hpc_concepts/advanced_slurm_features.html)
+- Kempner: [Overview](https://handbook.eng.kempnerinstitute.harvard.edu/s1_high_performance_computing/kempner_cluster/overview_of_kempner_cluster.html) · [Responsible use](https://handbook.eng.kempnerinstitute.harvard.edu/s1_high_performance_computing/kempner_cluster/kempner_policies_for_responsible_use.html) · [Advanced SLURM](https://handbook.eng.kempnerinstitute.harvard.edu/s1_high_performance_computing/general_hpc_concepts/advanced_slurm_features.html) · [Choosing a GPU partition](https://handbook.eng.kempnerinstitute.harvard.edu/technical_blog/choosing_gpu_partition.html) (benchmarks + workload guide)
