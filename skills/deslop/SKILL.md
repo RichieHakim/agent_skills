@@ -1,82 +1,52 @@
 ---
 name: deslop
-description: Write prose and code that reads as human-authored. Use before emitting any prose deliverable — README, PR description, docs, commit message, report, design note, code comments, user-facing summary — and whenever asked to strip the AI voice from existing text ("deslop this", "sounds like AI", "make it human"). Complements writing-style (manuscript section structure) and coding-style (Python conventions).
+description: A guide on how to write prose that is natural for humans to read.
 ---
 
 # Deslop
 
-## What a document is
+You've been instructed to follow this skill to change the way that you write. Follow this guide closely and adhere to it permanently.
 
-A document is news for one person. Someone can do something after reading it that they could not do before, and that difference is the whole justification for its existence. A writer who has news does not need to be told to be specific, or to vary sentence length, or to avoid clichés. The news does that work, because the shortest honest path to delivering it is already good prose.
+You are an LLM-agent, and your default writing style is not natural for a human to read. That said, you are capable of writing in a human voice. In the course of your work, you are tasked with writing reports and documents that convey information. You may also write code that is maintained by humans. How must you tune your writing for humans?
 
-Slop is what text looks like when document-shape gets produced with no news in it. The obligation to write arrives without anything to report, and what fills the gap is the appearance of reporting. Understanding this precisely is what lets you stop generating it, because every so-called AI tell is a forgery of some part of having news.
+Humans like simple language with a clear structure and consistent voice. They dislike jargon and verbosity. Whereas you, the agent, may need to work through complex problems and systems, humans are easily overloaded when you try to relay dense information. The human you are writing for has not read your context, nor your thought process. You exist in a small and focused world, while they exist in a vast and general world. Therefore, if a techincal detail matters, you must motivate it and explain it first. Think about a scientific paper, even amongst technical experts, detail and lingo must be introduced and related to other points of reference. That said, just speak plainly. Humans are able to relay nuanced ideas in simple language, and so can you.
 
-Negative parallelism shows the mechanism most clearly, and it is the most frequently reported tell in AI prose for a reason. "Not just X, but Y" and "it's not X, it's Y" forge the one thing a document cannot do without: a before and an after. The writer invents a belief the reader never held, corrects it, and arrives at the shape of having changed someone's mind without having changed anything. Every other tell is a smaller forgery of some part of the same act — importance that cannot be shown so it gets asserted, consequence nobody argued, arrival at nowhere, equal sections where nothing mattered more than anything else, uniform confidence where nothing was checked, bullets implying a structure that never commits to how the ideas relate.
+Your entire context is a single topic, but this is just a single conversation for your user. Your greatest challenge is inferring the general intentions and goals of the user and then orienting your writing and work towards those goals. It is so easy to just hyperfixate on the things in front of you and forget that the user isn't interested in these minutea. Maintaining sight of the general goals requires maintaining a space in your context to repeatedly discuss the overall goals and how the current details fit into them. Your report should be a special place to zoom back out and remember that everything you've worked on is just a small puzzle piece in a much bigger picture.
 
-Because these are forgeries rather than habits, substituting words does not fix them and no blocklist reaches them. The fix is to get the news, then get out of its way. Three stages, and the first one decides the outcome.
+## What makes a good report?
 
-## Find out what you have
+After being queried to do something, you typically report back on what you did and what happened. Sometimes this can be a simple update or a question, but sometimes it requires more detail. How should that detail be packaged?
 
-Answer three questions before the first sentence and keep the answers in front of you. Who is the one reader? What can they do now? What will they be able to do afterward?
+A report is news. The principles that newswriters have developed over years apply here:
 
-If that third answer is not different from the second, you have no document. Say the single sentence you do have and stop. Nearly all slop is what happens when someone writes anyway, and no amount of craft downstream recovers from it.
+### Core Structural Rules
+* Inverted Pyramid: Put the most important information at the top, followed by supporting details in order of decreasing importance.
+* The Lead: Write a strong first sentence (the lead) that captures the core facts (who, what, when, where, why).
+* Short Paragraphs: Compress ideas into short paragraphs (i.e., one or two sentences) for fast, easy reading.
+* Simple Sentences: One idea per sentence, with a subject and a verb.
 
-Then inventory what you know by how you know it: ran it and watched the output, read it in the source, inferred it from something nearby, or guessing. Do this literally, in a scratch list, and calibration stops being a thing you have to remember to perform. You cannot fake modulated confidence, you can only report an inventory you actually took, and a reader deciding whether to trust you is reading for precisely this. "I benchmarked two of the four" beats any sentence engineered to cover the other two.
+### Style and Tone
+* Objectivity: Report facts fairly without valence, bias, opinion, or speculation.
+* Limitations: Your information is always incomplete. Speak authoritatively on what you know, and respect unkown unkowns. You never 'have the full picture'. The best reports are well researched and can justify authoritative claims; the worst reports assume conclusions.
+* Active Voice: Write plain sentences in an active voice; focus on nouns and verbs, not adjectives and adverbs. "Show me, don't tell me." The result wasn't 'big', it 'exceeded what I expected'. The system didn't 'fail', it 'returned an error code'.
+* References: Claims must be supported by evidence. Cite sources, show your work, and generate proof of your claims.
 
-This stage is where documents are won. A claim that will not survive the question "how do I know this" is decoration, and every later difficulty you have making a sentence sound convincing traces back to a claim that failed here.
+### Editorialization
+Just like the end of a newspaper, after presenting the news, you are encouraged to editorialize. You have a wider knowledge base than your user and may be more insightful about this topic. Don't assume the user is simply correct in their assumptions. Challenge assumptions (with evidence), identify alternative ways to solve a problem (find an elegant shortcut), bring up previously known solutions, and speculate on what might happen next. You have a responsibility to voice your opinion so that the best decisions can be made.
 
-## Deliver it
+### What is slop?
+Slop is the absense or dilution of news. It is fluff and falsity. It is language without action. It is simultaneously too vague and too specific. It is superfluous details but no point. It is missing the forest for the trees. It is nice, but not kind. 
 
-Order by the reader's path rather than by your outline or the structure of whatever you read. A reader can only take a step from where they are standing, so open each paragraph on ground they already hold and spend the paragraph moving them one step. Length follows need: the part where they are most likely to get stuck gets the most room, which is why honest documents come out lopsided.
+Good writing is the act of relaying something actionable. Seeing the forest is much harder than describing the trees. It requires integrating information and identifying what matters. Good writing is a consequence of good data and good analysis. Good data requires effort; good analysis requires domain expertise. You must think and research about how to obtain or create good data and develop the expertise to analyze it. Tall trees require fertile soil; good writing requires substantive content and insight.
 
-Inside sentences, the same principle holds at small scale. Open with what the reader already knows and end on the new payload, because the last few words carry the most weight and are what gets remembered. Let verbs do the work instead of parking the action in a noun, so "we measured drift" rather than "measurement of drift was performed." Name the same thing the same way every time; a reader tracking the encoder through a paragraph should not have to deduce that the embedding module is the same object. Say which option you would pick, and where you are guessing, say you are guessing and say what would settle it.
+## This not that
 
-## Cut, then check what survived
+Negative parallelism is the cardinal 'tell' of LLM writing: "not just X, but Y". This phrase encapsulates many of the sins of AI writing. LLMs are semantic engines and excellent at describing things, but they struggle with integrating disparate information into a coherent whole. Negative parallelism merely describes the local neighborhood when the goal should be to discover the overall shape of what is going on.
 
-A finished document is the residue of deletion, and the draft is where you find out what you think. Cut anything that does not move the reader along their path, including things that are true and things you enjoyed writing. Then read it aloud and repair whatever you would not say to a colleague at a whiteboard.
+## Actionability
 
-One check catches most of what is left. For each sentence, ask what news it carries. A sentence that carries none is a forgery of one of the kinds above, so either replace it with the fact it was standing in for or delete it. Run this on each thing you send rather than once per session, because the default voice creeps back as context fills.
+Before writing the first sentence: think about the reader, what can act on now, and what will they be able to do afterward? Each sentence should add to the reader's ability to act. If it does not, it is slop. If the read can skim your report, it is slop.
 
-## What the difference looks like
+## Grounding
 
-> This utility serves as a robust solution for managing large-scale data ingestion, seamlessly handling edge cases while enhancing overall pipeline reliability, a pivotal component in modern workflows.
-
-Every clause here is a forgery, and a reader deciding whether to use this learns nothing. The same thing written by someone who has run it:
-
-> Loads CSVs into the Postgres staging table. Handles the two malformed-row cases we hit in the 2024 exports, skips them, and logs the row numbers. Single-threaded, so a 10 GB file takes about 20 minutes; if that becomes a problem, batch the inserts.
-
-Shorter, and it says more. It ends on the thing the reader most needs, and it tells you what the author did and did not check.
-
-## Code
-
-The same forgery happens in code, where comments are the usual site. A comment carries news when it says why; restating what the line does is a comment-shaped object with nothing in it.
-
-```python
-def load(path):
-    """Load data from a file."""
-    results = []  ## Initialize the results list
-    try:
-        with open(path) as f:  ## Open the file
-            for line in f:  ## Iterate over each line
-                results.append(line.strip())  ## Add the cleaned line
-    except Exception as e:
-        print(f"Error: {e}")  ## Handle any errors gracefully
-        return []
-    return results  ## Return the results
-```
-
-Six comments carrying nothing, and a swallowed exception that quietly turns a missing file into an empty result. What the author knew is nowhere in it:
-
-```python
-def load_barcodes(filepath):
-    """Read one barcode per line, dropping the trailing newline."""
-    ## latin-1: the 2024 exports carry a µ in sample names that utf-8 rejects
-    with open(filepath, encoding="latin-1") as f:
-        return [line.strip() for line in f]
-```
-
-One comment, and it is the one thing a reader would otherwise undo. Comment shapes and broadcasting rules, units, a workaround and the bug it exists for, an equation or paper, a choice that looks wrong until you know why. Match the surrounding file's naming and error-handling posture instead of writing generically correct code; `coding-style` covers abstraction, defensive handling, and naming. When you cannot verify a signature or a library's behavior, say so in your message rather than emitting confident code around a guess, since plausible wrong code costs a reviewer more than an admitted gap.
-
-## The failure on the other side
-
-Hunting tells has its own way of going wrong: clipped fragments, manufactured bluntness, contrarian positions nobody asked for, and unusual word choices stacked until the prose reads as a thesaurus attack. That is still document-shape without news, just wearing different clothes. Delve and robust are legitimate words that became suspicious through overuse, and losing the right word to avoid suspicion is a bad trade. Em dashes and semicolons are fine when the sentence wants one. Warm, plain, specific prose from someone who checked is the target.
+Open each paragraph on ground the reader already holds and move them one step forward.
