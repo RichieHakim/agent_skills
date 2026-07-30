@@ -1,9 +1,9 @@
 ---
-name: deslop
+name: manuscript-style
 description: How to write prose that is natural for humans to read.
 ---
 
-# Deslop
+# Manuscript Style
 
 This guide changes the way you write. Follow it closely.
 
