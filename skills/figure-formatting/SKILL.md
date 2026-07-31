@@ -45,6 +45,8 @@ fig.text(pos.x0 - 0.03, pos.y1 + 0.02, "A",
          fontfamily='Arial')
 ```
 
+Offsets like `-0.03` and `+0.02` are figure fractions, so their meaning changes with figure size. Convert rather than guess: at figure height *H* inches, 1 pt of vertical space is `1/(72*H)` fig-frac; at width *W* inches, 1 pt horizontal is `1/(72*W)`. One line of 8 pt text on an 8" tall figure is `8/(72*8)` ≈ 0.014. 
+
 ## rcParams baseline
 
 Adjust the following `rcParams` settings as needed to ensure consistent typography and styling.
@@ -131,6 +133,8 @@ rcParams.update({
   ax_spacer = fig.add_subplot(gs_inner[1, 0]); ax_spacer.axis("off")
   ```
 - For square or fixed-ratio panels, you can use `ax.set_box_aspect(1.0)` (or `0.75` for 25% shorter, etc.).
+- **`set_box_aspect` overrides `hspace`.** Once the box aspect is fixed, the axes size follows the aspect rather than the gridspec cell, so tightening `hspace` leaves the visible gap unchanged. To close it, call `fig.canvas.draw()` and then place the axes explicitly with `ax.set_position([x0, y0, w, h])`.
+- When a figure has separable parts (panel groups, top and bottom halves), give each its own renderer function and its own output file, then have a composite script import and call them. Each part can then be revised and inspected on its own, and the composite stays a layout file rather than a plotting file.
 - Get creative with layout! Don't be afraid to break out of the standard grid and use `fig.add_axes` for custom placements. Just make sure to maintain consistent styling and alignment.
 
 ## Rasterization for performance
@@ -147,13 +151,14 @@ The `dpi` argument in `savefig` controls the resolution of rasterized elements. 
 ## Output
 
 - Always save **PNG** (600 dpi), **SVG**, and **PDF** (all with `dpi=600, bbox_inches='tight', pad_inches=0.1, transparent=False`). If the figure is very large, prompt the user for guidance on DPI.
+- While the layout is still moving, it can sometimes be wise to render PNGs at a reduced dpi to iterate more quickly.
 - Save into **hierarchical subfolders named after the analysis**, e.g., `figures/consistency_curves/barplot_means`.
 - After every render, visually inspect for correctness, layout, and style. Common issues include whitespace, overlapping text, and misaligned panels. Debug in a loop a few times until the figure looks right or ask for help if you're stuck.
 - SVG is the editable master for Illustrator; PNG is the raster preview.
 - Expect figures will be edited in Adobe Illustrator, included in LaTeX manuscripts, and submitted to journals.
 - For LaTeX embedding, convert SVG to PDF using the `latex-pdf-preprocess` skill.
 - If a PDF has excess whitespace (e.g., from Illustrator artboard being larger than artwork), crop with `pdfcrop --margins 2 input.pdf output.pdf` (margin in bp, 1bp = 1/72 inch).
-- If possible, prepare the data used in the figure and plotting code to allow for portability and easy regeneration in the future.
+- **Separate data preparation from plotting.** Compute the plotted quantities once into a single container, save that container alongside the figure, and have the plotting functions read only from it — not from raw sources, a database, or a live session. The figure then regenerates years later from one small file rather than from a pipeline that no longer runs. Use `.npz` for purely numerical data, `zarr` or `h5` for large or mixed data, and `richfile` for arbitrary Python structures. Avoid pickle, which breaks when library versions change.
 
 ## Recommended helper
 
