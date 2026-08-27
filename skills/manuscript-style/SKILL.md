@@ -14,6 +14,36 @@ description: Style guidelines for writing manuscript text.
 - Plain language. Move the technical details to the methods section to keep things clean.
 - Ideas should link together in a causal chain.
 
+## General writing style
+
+### What is good writing?
+- Good scientific writing can only be written by a domain expert. To be a domain expert, you must understand what motivates your field
+- Style: "Domain expert motivating and illustrating a new finding to a lamen audience."
+- Decide what you are writing before you write. If you aren't sure what must be communicated, do more research.
+- Every sentence must make a point. A point changes what the reader believes.
+- Before writing each paragraph, state in one plain sentence what information needs to be conveyed. If that sentence is vague or not critical to the story, you aren't ready to write it. Bolster your understanding or write something else.
+- Be ruthless about cutting text that does not further the points that you need to make. Budget how much text should be allocated to making each point. Ask how much reader-attention does each point deserve?
+
+### What is lazy writing?
+- Much like a cake baked at too high heat, lazy writing looks 'over-under'. It is both burnt and raw. It lacks actual cake. Lazy writing expresses a lot of specifics that don't come together to make impactful points. It states impact rather than motivating conditions that result in impact and then illustrating how the substance of the paper meets those conditions.
+- Symptoms of lazy writing:
+  - over-coverage: a list of discovered information without integration into greater points
+  - defensibility: vague language
+  - overly specific jargon
+- Examples of symptoms of lazy writing:
+  - "Leverages," "is the harder half," "exploits the structure"
+    - These are vague, defensible words that attempt to cover an idea. Go back and figure out enough to be able to use words with narrower definitions that make a more precise point.
+
+## Syntax
+- When writing LaTeX, make each sentence a line.
+```
+This is the first sentence.
+This is the second sentence.
+
+This is a new paragraph.
+This is the second sentence in the new para.
+```
+
 ## Sections
 
 ### Introduction
