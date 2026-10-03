@@ -32,7 +32,7 @@ Assign subagents focused tasks. One idea, one step. Your job is multistep and mu
 - **Polling loops.** Checking for results too frequently. Just dispatch a checker agent.
 - **Trusting the summary.** A subagent's report is informed by limited context; take it with a grain of salt. Verify it when the outcome matters.
 - **Absorbing bloated reports.** Allowing subagents to dump >1k tokens back into your context. Require them to write artifacts instead.
-- **Expecting too much of subagents.** Subagents should be assigned small tasks.
+- **Oversized dispatches.** Subagents should be assigned small tasks. Do not assign tasks that will take >200k context to finish. Split and serialize instead.
 
 ## Multi-agent patterns
 

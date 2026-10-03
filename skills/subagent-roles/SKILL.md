@@ -15,6 +15,7 @@ Every dispatch prompt MUST include:
 5. Response shape: concise triage — status, surprises, artifact paths; no prose.
 6. Model: explicit (see `references.md`), don't just inherit.
 7. Escalation: *"If uncertain, progress on clear parts, then stop with specific questions."*
+8. Budget: *"Soft cap ~200k context.
 
 ## Roles
 

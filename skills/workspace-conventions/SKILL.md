@@ -34,3 +34,4 @@ Symlinks to permanent storage (`<agent_assets_meta_directory>`) so `$HOME` doesn
 - Don't change settings, install packages, or modify the environment unless explicitly asked.
 - Write and run small test scripts in `agent_assets/<topic>/code/`.
 - Store lightweight artifacts in `artifacts/`; large files (`.npy`, models, checkpoints) go to `<temp_data_dir>` (see `references.md`).
+
