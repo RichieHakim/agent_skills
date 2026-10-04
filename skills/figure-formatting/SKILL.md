@@ -1,6 +1,6 @@
 ---
 name: figure-formatting
-description: Guide for styling scientific figures with matplotlib.
+description: Guide for styling scientific figures with matplotlib. Use for any figure in this user's scientific work (reports, manuscripts, talks, analysis plots).
 user-invocable: true
 ---
 
@@ -156,7 +156,7 @@ The `dpi` argument in `savefig` controls the resolution of rasterized elements. 
 - After every render, visually inspect for correctness, layout, and style. Common issues include whitespace, overlapping text, and misaligned panels. Debug in a loop a few times until the figure looks right or ask for help if you're stuck.
 - SVG is the editable master for Illustrator; PNG is the raster preview.
 - Expect figures will be edited in Adobe Illustrator, included in LaTeX manuscripts, and submitted to journals.
-- For LaTeX embedding, convert SVG to PDF using the `latex-pdf-preprocess` skill.
+- For LaTeX embedding, use the saved PDF. If the PDF was exported from Illustrator, fix it with the `latex-pdf-preprocess` skill first.
 - If a PDF has excess whitespace (e.g., from Illustrator artboard being larger than artwork), crop with `pdfcrop --margins 2 input.pdf output.pdf` (margin in bp, 1bp = 1/72 inch).
 - **Separate data preparation from plotting.** Compute the plotted quantities once into a single container, save that container alongside the figure, and have the plotting functions read only from it — not from raw sources, a database, or a live session. The figure then regenerates years later from one small file rather than from a pipeline that no longer runs. Use `.npz` for purely numerical data, `zarr` or `h5` for large or mixed data, and `richfile` for arbitrary Python structures. Avoid pickle, which breaks when library versions change.
 

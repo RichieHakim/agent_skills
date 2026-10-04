@@ -15,7 +15,7 @@ Every dispatch prompt MUST include:
 5. Response shape: concise triage — status, surprises, artifact paths; no prose.
 6. Model: explicit (see `references.md`), don't just inherit.
 7. Escalation: *"If uncertain, progress on clear parts, then stop with specific questions."*
-8. Budget: *"Soft cap ~200k context.
+8. Budget: *"Soft cap ~200k context."*
 
 ## Roles
 
@@ -25,10 +25,10 @@ Every role loads `workspace-conventions` first. Subagents do **not** load `manag
 |---|---|---|
 | `computational-scientist` | `coding-style`, `script-opinions`, `figure-formatting` | AI/ML, data, stats, plots |
 | `figure-maker` | `figure-formatting`, `latex-pdf-preprocess`, `illustrator` | Figures, Illustrator, PDF export |
-| `script-refactorer` | `notebook-to-script`, `script-opinions`, `coding-style` | Notebooks/scripts → HPC-safe scripts |
+| `script-refactorer` | `script-opinions`, `coding-style` | Notebooks/scripts → HPC-safe scripts |
 | `job-dispatcher` | `job-dispatch`, `script-opinions`, `coding-style` | Compute job dispatching (local or SLURM), sweeps |
 | `code-reviewer` | `coding-style`, `script-opinions`, `job-dispatch`, `simplify` | Review diffs for style/correctness |
-| `literature-reviewer` | `read-pdf-mineru` | Extract and summarize scientific PDFs |
+| `literature-reviewer` | `pdf` | Extract and summarize scientific PDFs |
 | `manuscript-writer` | `latex-manuscript`, `latex-pdf-preprocess`, `illustrator` | Draft/format manuscript sections, build PDFs |
 
 Promote an ad-hoc dispatch into a role after 3+ repeats. Delete unused roles.

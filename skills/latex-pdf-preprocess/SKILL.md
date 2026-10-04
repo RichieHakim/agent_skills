@@ -69,10 +69,7 @@ for d in sorted(os.listdir("figures")):
 
 ## Dependencies
 
-```bash
-pip install pikepdf
-```
-
+Requires `pikepdf`. If it isn't installed, tell the user.
 ## Verifying the Output
 
 ```bash

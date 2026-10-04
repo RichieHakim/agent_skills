@@ -99,17 +99,7 @@ We note that this comparison was performed on $N=4$ animals; replication in larg
 
 ## 6. Working with reviewer response documents (.docx)
 
-Reviewer response docs are usually Word files. Use the docx skill's unpack/edit/pack workflow:
-
-```bash
-# Unpack to editable XML
-python3 scripts/office/unpack.py responses.docx unpacked/
-
-# Edit unpacked/word/document.xml with the Edit tool
-
-# Repack
-python3 scripts/office/pack.py unpacked/ responses_revised.docx --original responses.docx
-```
+Reviewer response docs are usually Word files. Load the `docx` skill and follow its unpack, edit, and repack steps. Its scripts live in that skill's directory, not in the manuscript repo.
 
 **Extracting text from reviewer XML** for analysis:
 ```python
