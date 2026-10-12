@@ -32,6 +32,7 @@ Assign subagents focused tasks. One idea, one step. Your job is multistep and mu
 - **Polling loops.** Checking for results too frequently. Just dispatch a checker agent.
 - **Trusting the summary.** A subagent's report is informed by limited context; take it with a grain of salt. Verify it when the outcome matters.
 - **Absorbing bloated reports.** Allowing subagents to dump >1k tokens back into your context. Require them to write artifacts instead.
+- **Reporting every step.** Responding/reporting intermediate results after each subagent returns or a step finishes. It spreads the answer across many messages, fills your context with half-integrated prose, and coins names before all the evidence is in. Log interim results in `MEMORIES.md`, and integrate once, when every result is in.
 - **Oversized dispatches.** Subagents should be assigned small tasks. Do not assign tasks that will take >200k context to finish. Split and serialize instead.
 
 ## Multi-agent patterns
