@@ -11,7 +11,7 @@ Every dispatch prompt MUST include:
 1. Role + skills: `Act as <role>. Load workspace-conventions, then: <skills>.`
 2. Briefing: context or `MEMORIES.md` anchors. Give required specifics, but grant the subagent some freedom to use its judgement. Only micromanage less intelligent models.
 3. Task: narrow scope, exact paths, deliverables, explicit non-goals ("do NOT touch X, Y").
-4. Artifact target: explicit path for substantive findings, conventionally `agent_assets/<topic>/artifacts/reports/<HHMM>_<role>_<slug>.md`. The subagent can be as thorough as the task warrants there.
+4. Paths: the report for substantive findings, and the task folders for code, outputs, or figures, named per `workspace-conventions`. The subagent can be as thorough as the task warrants in the report.
 5. Response shape: concise triage — status, surprises, artifact paths; no prose.
 6. Model: explicit (see `references.md`), don't just inherit.
 7. Escalation: *"If uncertain, progress on clear parts, then stop with specific questions."*

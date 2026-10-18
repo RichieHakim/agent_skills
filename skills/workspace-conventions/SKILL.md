@@ -5,25 +5,33 @@ description: Workspace layout, artifact storage, and behavior rules shared by ev
 
 # Workspace conventions
 
-## Workspace layout
+## Layout
 
-All agent files live under `agent_assets/<topic>/` with subdirs: `MEMORIES.md`, `code/` (agent scripts), `artifacts/` (outputs, logs, plots, etc. — organize with subdirs).
+All agent files live in `agent_assets/`, one folder per topic:
 
-## Naming `<topic>` directories
+```text
+agent_assets/
+├── README.md                          # optional index of topics
+├── auto-memory/                       # see keeping-memories
+└── YYYYMMDD_<slug>/                   # one topic
+    ├── MEMORIES.md
+    ├── code/YYYYMMDD_<task>/          # one task's scripts
+    └── artifacts/
+        ├── reports/YYYYMMDD-HHMM_<role>_<slug>.md
+        ├── figures/YYYYMMDD_<figure>/ # data, renders, drafts, critic logs
+        ├── work/YYYYMMDD_<task>/      # outputs and logs of code/YYYYMMDD_<task>/
+        └── files/YYYYMMDD_<slug>/     # files from the user, downloaded papers
+```
 
-Name the topic directory `YYYYMMDD_<slug>`, where the date is the day the work started
-and the slug is two to four lowercase words joined by hyphens. Example:
-`agent_assets/20260811_janelia-talk-description/`.
+- **Only what the tree shows** goes at these levels. Plans, briefs, and handoffs are reports. A report made of several files, like LaTeX, gets a dated folder in `reports/`. Inside a dated folder, name things freely.
+- **Date every folder you add** with the day it was created. Reports add the time. Get both from `date +%Y%m%d-%H%M`, never from memory. A slug is two to four lowercase words joined by hyphens; on a same-day clash, append `_02`.
+- **A task's code and outputs share one name:** `code/20261017_push-directions/` writes to `artifacts/work/20261017_push-directions/`.
+- **Drafts and backups go inside the folder** of the thing they belong to, not beside it.
+- **File it right the first time.** Notes and scripts cite absolute paths, so moves break them. Don't rename, move, or delete existing folders unless the user asks.
 
-If two topics start on the same day, append `_NN` starting at `_02`:
-`20260811_janelia-talk-description_02`.
+## Topics
 
-Before creating a directory, run `ls -1 agent_assets/` and read the names. If a
-directory already covers this work, use it. Do not create a new one per session, per
-subagent, or per attempt. The date records when the work started, not when you looked
-at it.
-
-Do not rename or delete an existing topic directory unless the user asks.
+Before creating a topic, run `ls -1 agent_assets/`. If one already covers the work, use it; don't start one per session, subagent, or attempt. When the work turns to a new question or deliverable, start a new topic and link to it from the old `MEMORIES.md`.
 
 ## `agent_assets/` is a symlink
 
@@ -32,6 +40,4 @@ Symlinks to permanent storage (`<agent_assets_meta_directory>`) so `$HOME` doesn
 ## Behavior
 
 - Don't change settings, install packages, or modify the environment unless explicitly asked.
-- Write and run small test scripts in `agent_assets/<topic>/code/`.
-- Store lightweight artifacts in `artifacts/`; large files (`.npy`, models, checkpoints) go to `<temp_data_dir>` (see `references.md`).
-
+- Large files (`.npy`, models, checkpoints) go to `<temp_data_dir>` (see `references.md`), not `artifacts/`.

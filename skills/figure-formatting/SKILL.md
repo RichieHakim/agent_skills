@@ -6,50 +6,28 @@ user-invocable: true
 
 # Figure Formatting
 
-Style guide for generating publication-ready scientific figures with matplotlib. These conventions match the visual language of the face-rhythm manuscript and should be applied to all new figures.
+Style for publication-ready matplotlib figures, matching the face-rhythm manuscript. Figures go to Illustrator, LaTeX manuscripts, and journals.
 
-## Typography
+## Text
 
-- **Font**: Arial only. Note: On Linux where Arial is unavailable, use `"Nimbus Sans"` as the rendering font (identical metrics), then post-process SVGs to replace with Arial:
-  ```python
-  svg_text = Path("figure.svg").read_text()
-  svg_text = svg_text.replace("Nimbus Sans", "Arial")
-  Path("figure.svg").write_text(svg_text)
-  ```
-- **Minimum size**: 8 pt normal-weight for all text including tick labels, axis labels, legends, and annotations. Never use font sizes smaller than 8 pt; if text doesn't fit, consider how to abbreviate, rotate, remove, or redesign the text or panel layout.
-- **Panel titles**: ~10 pt, bold, lowercase except for acronyms (e.g., PCA, EVR, BMI, etc.). 
-- **Sub-panel titles**: 8 pt, normal weight.
-- **Units**: parenthesized after label, e.g., `frequency (Hz)`, `time (s)`, `(a.u.)`.
+- **Font:** Arial. On Linux, render with `"Nimbus Sans"` (same metrics), then replace `Nimbus Sans` with `Arial` in the saved SVG text.
+- **Size:** 8 pt minimum for all text, including ticks and keys. If text doesn't fit, abbreviate, rotate, remove, or redesign rather than shrink.
+- **Panel titles:** ~10 pt, bold, lowercase except acronyms (PCA, EVR), centered over the panel. For a panel made of several axes, center the title over all of them, not over the first. Sub-panel titles: 8 pt, normal weight.
+- **Axis labels:** the quantity in plain words, then its unit in parentheses: `frequency (Hz)`, `time (s)`. No code variable names, coined terms, or undefined abbreviations. Use `(a.u.)` only when the scale really is arbitrary; for a ratio, say what it is relative to: `firing rate (% of baseline)`.
 
 ## Panel labels
 
-Every multi-panel figure must have panel labels. Add them automatically whenever a figure has more than one axes panel.
+Label every panel of a multi-panel figure: A, B, C, 16 pt bold, near the top-left of the panel, aligned across rows and columns. For subdivisions, use B(i), B(ii) with the numeral at 8 pt normal weight, or just refer to left and right subpanels.
 
-- **Main panel labels**: uppercase bold letters (A, B, C, …), 16 pt, Arial, bold. Place close to and near the top-left of each panel. Panel labels should be aligned across panels in the same row and column.
-- **Subpanel labels**: when a panel contains subdivisions, label them as e.g. **B(i)**, **B(ii)**, **B(iii)**, **B(iv)**. The letter remains 16 pt bold; the roman numeral suffix is 8 pt, normal weight. Make a judgement call on whether to use subpanel labels; referencing 'left' and 'right' subpanels is often sufficient and avoids clutter.
-
-For simple layouts, `ax.transAxes` works:
-```python
-for ax, label in zip(axes, ['A', 'B', 'C']):
-    ax.text(-0.12, 1.18, label, transform=ax.transAxes,
-            fontsize=16, fontweight='bold', va='top', ha='left',
-            fontfamily='Arial')
-```
-
-For complex layouts with nested gridspecs, use figure coordinates after rendering:
 ```python
 fig.canvas.draw()
 pos = ax.get_position()
-fig.text(pos.x0 - 0.03, pos.y1 + 0.02, "A",
-         fontsize=16, fontweight='bold', va='top', ha='left',
-         fontfamily='Arial')
+fig.text(pos.x0 - 0.03, pos.y1 + 0.02, "A", fontsize=16, fontweight='bold', va='top', ha='left')
 ```
 
-Offsets like `-0.03` and `+0.02` are figure fractions, so their meaning changes with figure size. Convert rather than guess: at figure height *H* inches, 1 pt of vertical space is `1/(72*H)` fig-frac; at width *W* inches, 1 pt horizontal is `1/(72*W)`. One line of 8 pt text on an 8" tall figure is `8/(72*8)` ≈ 0.014. 
+Offsets are figure fractions: 1 pt is `1/(72*H)` vertically and `1/(72*W)` horizontally for a figure of *W* × *H* inches.
 
 ## rcParams baseline
-
-Adjust the following `rcParams` settings as needed to ensure consistent typography and styling.
 
 ```python
 from matplotlib import rcParams
@@ -76,93 +54,30 @@ rcParams.update({
 })
 ```
 
-## Axes and spines
+## Plot elements
 
-- **Remove top and right spines** on line/scatter plots. Only keep left and bottom.
-- Spine and tick width: 0.75 pt.
-- Generally don't use gridlines unless there is a good reason.
-- **Axis ranges:** Strongly consider whether to bound the x/y axis ranges to more meaningful limits (e.g., 0 to 1, -100% to 100%, etc.) 
-
-## Lines
-
-- Default line width: 1 pt
-- Use solid lines. Avoid dashed lines.
-- When overlaying two methods/conditions, try to differentiate with color and reduce opacity of the secondary trace (~0.7) rather than using dashes.
-
-## Transparency and opacity
-
-- Use alpha/transparency **sparingly**. It is difficult to increase opacity post-hoc in Illustrator.
-
-## Colormaps and normalization
-
-- Use **perceptually uniform** colormaps (e.g., `viridis`) unless there is a strong reason not to. Dichromatic colormaps are also good.
-- For comparison across panels, use **shared normalization** (same `vmin`/`vmax`). Document if per-panel normalization is used.
-
-## Images and spatial maps
-
-- For scientific images, brighten and oversaturate slightly (`np.clip(img * 1.8, 0, 255)`) for visibility.
-- Crop images using `set_xlim` / `set_ylim` rather than array slicing (preserves coordinate alignment with scatter data).
-- When reference images consider whether to use `rasterized=True`.
-- When images represent different methods/conditions, adding a colored border (spine stroke / border line) to match the legend color can be effective for clarity.
-
-## Line plots
-
-- Aim for a clean look. Generally, avoid point markers unless there is good reason.
-- For statistics: Include each sample line (thin, transparent) as well as summary lines (thick, opaque) and use shaded errorbars without a stroke/border. For example, use `ax.fill_between(x, mean - std, mean + std, color='C0', alpha=0.3, linewidth=0)`. Decide between SEM, STD, and CI.
-
-## Bar and summary plots
-
-- **Overlay individual data points** on bars/means to show the underlying distribution. Use small markers with jitter and slight transparency (e.g., `s=12, alpha=0.7`).
-- Reduce whitespace aggressively. Bars should be close together.
-- Error bars should be a single 2 pt thickness vertical line with no cap.
-- Include error bars (SEM or CI) on summary statistics, and variance bars (STD) for more raw data statistics.
-
-## Legend placement
-
-- For legends with many entries that would overlap data, place below, to the side, or in a low-data region of the plot. For precise placement, you can use `bbox_to_anchor` with axes-fraction coordinates.
+- **Axes:** left and bottom spines only, 0.75 pt. No gridlines without a reason. Bound axis ranges to meaningful limits (0 to 1, -100% to 100%).
+- **Lines:** 1 pt, solid, no markers. To overlay two conditions, use color and drop the secondary trace to ~0.7 opacity rather than dashing it. Use transparency sparingly; it is hard to undo in Illustrator.
+- **Statistics:** thin, transparent lines for each sample under a thick mean; shaded error band with no edge (`fill_between(..., alpha=0.3, linewidth=0)`). Choose SEM, STD, or CI deliberately.
+- **Bars:** close together, with individual points overlaid (jittered, `s=12, alpha=0.7`). Error bars are a single 2 pt line with no cap: SEM or CI on summaries, STD on raw data.
+- **Color:** perceptually uniform (`viridis`) or dichromatic colormaps. Compared panels share `vmin`/`vmax`; note it if they don't.
+- **Images:** brighten slightly (`np.clip(img * 1.8, 0, 255)`). Crop with `set_xlim`/`set_ylim`, not slicing, to keep coordinates aligned with overlays. A border in a method's color can tie an image to that method.
+- **Keys:** keep them off the data: below, beside, or in an empty region (`bbox_to_anchor`).
 
 ## Layout
 
-- **Minimize whitespace**. Use `gridspec` with tight `hspace`/`wspace` (0.05-0.15 common).
-- Size the figure with the expectation that it will go into a manuscript in 8.5 x 11 letter format. Generally, this either means narrow enough to fit text to the side or taking up the entire width of the available page space.
-- **Figure size vs. text size**: `figsize` controls the plot area in inches; `rcParams` text sizes are absolute in points. Changing `figsize` doesn't change the text size.
-- To make a panel shorter than its gridspec allocation, you can use a nested subgridspec with an invisible spacer:
-  ```python
-  gs_inner = gs[0, 2].subgridspec(2, 1, height_ratios=[0.7, 0.3], hspace=0.0)
-  ax = fig.add_subplot(gs_inner[0, 0])
-  ax_spacer = fig.add_subplot(gs_inner[1, 0]); ax_spacer.axis("off")
-  ```
-- For square or fixed-ratio panels, you can use `ax.set_box_aspect(1.0)` (or `0.75` for 25% shorter, etc.).
-- **`set_box_aspect` overrides `hspace`.** Once the box aspect is fixed, the axes size follows the aspect rather than the gridspec cell, so tightening `hspace` leaves the visible gap unchanged. To close it, call `fig.canvas.draw()` and then place the axes explicitly with `ax.set_position([x0, y0, w, h])`.
-- When a figure has separable parts (panel groups, top and bottom halves), give each its own renderer function and its own output file, then have a composite script import and call them. Each part can then be revised and inspected on its own, and the composite stays a layout file rather than a plotting file.
-- Get creative with layout! Don't be afraid to break out of the standard grid and use `fig.add_axes` for custom placements. Just make sure to maintain consistent styling and alignment.
-
-## Rasterization for performance
-
-Identify scatter plots and image overlays with many (>1k) points. These elements produce thousands of vector paths and make SVGs/PDFs slow to render (watch for SVGs exceeding ~10 MB). Ask the user if they'd like to use `rasterized=True` on heavy artists to embed them as bitmaps while keeping text and axes as vectors:
-
-```python
-ax.imshow(img, rasterized=True)
-ax.scatter(x, y, c=colors, rasterized=True)
-```
-
-The `dpi` argument in `savefig` controls the resolution of rasterized elements. Use 600 dpi for publication quality.
+- Minimize whitespace: At a minimum, use `gridspec` with `hspace`/`wspace` around 0.05–0.15. Try to remove the whitespace entirely.
+- Size must find into a letter-sized manuscript: full text width, or narrow enough for text beside it. `figsize` doesn't change text size. Aim to make the figure small while maintaining easily readable text. Often individual figures are used as panels in a multi-panel figure.
+- `set_box_aspect` fixes a panel's shape but overrides `hspace`; to close the gap, `fig.canvas.draw()` and then `ax.set_position([x0, y0, w, h])`.
+- Give separable parts of a figure their own renderer function and output file, and compose them in a layout-only script.
+- Break the grid with `fig.add_axes` when it helps, keeping styling and alignment consistent.
 
 ## Output
 
-- Always save **PNG** (600 dpi), **SVG**, and **PDF** (all with `dpi=600, bbox_inches='tight', pad_inches=0.1, transparent=False`). If the figure is very large, prompt the user for guidance on DPI.
-- While the layout is still moving, it can sometimes be wise to render PNGs at a reduced dpi to iterate more quickly.
-- Save into **hierarchical subfolders named after the analysis**, e.g., `figures/consistency_curves/barplot_means`.
-- After every render, visually inspect for correctness, layout, and style. Common issues include whitespace, overlapping text, and misaligned panels. Debug in a loop a few times until the figure looks right or ask for help if you're stuck.
-- SVG is the editable master for Illustrator; PNG is the raster preview.
-- Expect figures will be edited in Adobe Illustrator, included in LaTeX manuscripts, and submitted to journals.
-- For LaTeX embedding, use the saved PDF. If the PDF was exported from Illustrator, fix it with the `latex-pdf-preprocess` skill first.
-- If a PDF has excess whitespace (e.g., from Illustrator artboard being larger than artwork), crop with `pdfcrop --margins 2 input.pdf output.pdf` (margin in bp, 1bp = 1/72 inch).
-- **Separate data preparation from plotting.** Compute the plotted quantities once into a single container, save that container alongside the figure, and have the plotting functions read only from it — not from raw sources, a database, or a live session. The figure then regenerates years later from one small file rather than from a pipeline that no longer runs. Use `.npz` for purely numerical data, `zarr` or `h5` for large or mixed data, and `richfile` for arbitrary Python structures. Avoid pickle, which breaks when library versions change.
-
-## Recommended helper
-
-- Use `bnpm.plotting_helpers.Figure_Saver` when available:
-  - `format_save=['svg', 'png']`
-  - `svg_fontType='none'`
-  - `kwargs_savefig={'dpi': 600, 'bbox_inches': 'tight', 'pad_inches': 0.1, 'transparent': False}`
+- Save PNG, SVG, and PDF with `dpi=600, bbox_inches='tight', pad_inches=0.1, transparent=False`. Use a lower dpi while the layout is moving. Ask the user about dpi for very large figures.
+- Save in `artifacts/<potential intermediate dirs>/figures/YYYYMMDD_<figure>/` (see `workspace-conventions`).
+- Inspect every render for overlaps, whitespace, and alignment, and fix in a loop or ask for help.
+- SVG is the editable master. LaTeX uses the PDF; if it came from Illustrator, run `latex-pdf-preprocess` first. Trim excess margins with `pdfcrop --margins 2 in.pdf out.pdf`.
+- For artists with more than ~1k points or SVGs over ~10 MB, ask the user whether to set `rasterized=True` on them.
+- Compute the plotted quantities once into one container saved beside the figure, and plot only from it, so the figure regenerates from one small file. Use `.npz` for numbers, `zarr` or `h5` for large or mixed data, `richfile` for Python structures; not pickle.
+- When available, use `bnpm.plotting_helpers.Figure_Saver` with `format_save=['svg', 'png']`, `svg_fontType='none'`, and the `savefig` kwargs above.
