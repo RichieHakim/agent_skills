@@ -25,7 +25,7 @@ good: "Most remaining errors are images that the classifier gets right at one cr
 
 Every key noun in the bad version is private: "edge flips", "ghost set", "2%" (of what), "steps 3-5", "Q2", "option (b)".
 
-Coined terms pile up most in lists of work that is running or done. You tend to call each task by the short name that you gave it in a prompt to a subagent. You wrote that prompt, so the name feels clear to you, but the user never saw it. Describe each task in plain words: what it does and why it matters.
+Coined terms pile up most in lists of work. You tend to call each task by the short name that you gave it in a prompt to a subagent. You wrote that prompt, so the name feels clear to you, but the user never saw it. Describe each task in plain words: what it does and why it matters.
 bad: "Still running: the noise check on enlarged images."
 good: "Still running: a test of whether enlarging the training images to twice their size removes their natural noise, which would make them look unrealistically clean."
 
